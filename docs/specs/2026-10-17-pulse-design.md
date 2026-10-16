@@ -1,6 +1,6 @@
 # PULSE Design
 
-Status: draft for approval · Team: Modern Voyagers (PSHS-CRC) · GATES GeoHack 2026
+Status: approved 17 Oct 2026 · Team: Modern Voyagers (PSHS-CRC) · GATES GeoHack 2026
 Development period: 8 Oct to 8 Nov 2026 · Mandatory check-ins: 20 Oct, 3 Nov · Freeze: 8 Nov
 
 Items marked **(my call)** are decisions I made for the builder, not decisions you made. Check them while reading.
@@ -126,13 +126,15 @@ Unconfirmed: what interfaces the GATES sandbox exposes. DuckDB reads most format
 
 The product must look premium, in the sense of a considered government-grade analytics product, not a template dashboard.
 
-- Calm, high-contrast, restrained palette with one strong accent and semantic colours reserved for data status. Light and dark themes.
+- **Clean and minimalist (user direction, 17 Oct).** Generous whitespace, few elements per screen, one clear job per screen. Every element earns its place. No decoration that carries no information.
+- **Avoid generic AI-generated design (user direction, 17 Oct).** No purple-to-blue gradients, glassmorphism, glowing cards, emoji as icons or section markers, stock hero sections, identical rounded cards everywhere, accent bars on cards, or default Inter-plus-shadcn look. Hierarchy comes from type, spacing and alignment rather than boxes and shadows. Copy is plain and specific, not marketing language.
+- Calm, high-contrast, restrained palette with one accent and semantic colours reserved for data status. Light and dark themes.
 - Characterful display typeface with a legible body face and a monospaced face for figures.
 - Real geographic shapes: municipality polygons, not dots, with smooth hover, selection and transitions.
 - Data trust and provenance are part of the visual language: status pills, version chips, the synthetic-data band and watermark.
 - Print-quality evidence brief.
 - Works on a laptop projector and on a phone. Keyboard accessible.
-- **(my call:)** the mockup's visual style is a placeholder. The next step after this document is a short visual-direction pass, using the frontend-design skill, with the user choosing between two or three directions before UI build starts.
+- **(my call:)** the mockup's visual style is a placeholder. A short visual-direction pass (two or three minimalist directions for the user to choose from) happens before screens are built, and is an early task in the build plan.
 
 ## 9. Judging priorities
 
