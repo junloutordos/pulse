@@ -1,0 +1,11 @@
+# Proposal PDFs contain personal contact details
+*.pdf
+.remember/
+.DS_Store
+# Laravel / Node / Python (app scaffolding comes later)
+/vendor
+/node_modules
+.env
+.venv/
+__pycache__/
+/storage/*.key

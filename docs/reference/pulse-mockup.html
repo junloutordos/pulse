@@ -1,0 +1,407 @@
+<title>PULSE Caraga Mockups</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky app bar + synthetic-data band, step tabs in demo order, two-pane workspace (geography left, evidence right) */
+:root{
+  --bg:#f2f5f4; --surface:#ffffff; --ink:#14232b; --muted:#566a70; --line:#d5dfdc;
+  --accent:#0d6b73; --accent-ink:#ffffff; --accent-soft:#d9ecec;
+  --ok:#2c7a4b; --ok-soft:#dcefe3; --warn:#9a5d00; --warn-soft:#fbefd6; --crit:#b3261e; --crit-soft:#f8dedb;
+  --syn:#f2c14e; --syn-ink:#3a2a00;
+  --q0:#eef2d6; --q1:#bfdcae; --q2:#7cbfa0; --q3:#2f8f8c; --q4:#165a6e;
+  --land:#e3e9e5; --sea:#eaf1f3; --hatch:#b8c4c2;
+  --font-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --font-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1619; --surface:#162226; --ink:#e2ebe8; --muted:#93a6a9; --line:#29393d;
+  --accent:#55b8b9; --accent-ink:#0a1416; --accent-soft:#1b3a3d;
+  --ok:#6cc391; --ok-soft:#173225; --warn:#e3a33b; --warn-soft:#3a2c12; --crit:#ef7a6f; --crit-soft:#3d1d1a;
+  --syn:#d9a93a; --syn-ink:#1f1600;
+  --q0:#24403a; --q1:#2c6253; --q2:#3c8a74; --q3:#62b59b; --q4:#b2e6cb;
+  --land:#1b292d; --sea:#121d20; --hatch:#3a4c50; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1619; --surface:#162226; --ink:#e2ebe8; --muted:#93a6a9; --line:#29393d;
+  --accent:#55b8b9; --accent-ink:#0a1416; --accent-soft:#1b3a3d;
+  --ok:#6cc391; --ok-soft:#173225; --warn:#e3a33b; --warn-soft:#3a2c12; --crit:#ef7a6f; --crit-soft:#3d1d1a;
+  --syn:#d9a93a; --syn-ink:#1f1600;
+  --q0:#24403a; --q1:#2c6253; --q2:#3c8a74; --q3:#62b59b; --q4:#b2e6cb;
+  --land:#1b292d; --sea:#121d20; --hatch:#3a4c50; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1280px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1rem;font-weight:700}
+p{margin:0}
+.mono,.num{font-family:var(--font-data);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* app bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand h1{font-size:1.45rem;font-weight:800;letter-spacing:.04em}
+.brand span{color:var(--muted);font-size:.9rem}
+.ver{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.78rem;white-space:nowrap}
+.syn{background:repeating-linear-gradient(-45deg,var(--syn) 0 14px,color-mix(in srgb,var(--syn) 80%,var(--bg)) 14px 28px);color:var(--syn-ink);font-weight:700;font-size:.82rem}
+.syn .wrap{padding-block:5px;display:flex;gap:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:2px;overflow-x:auto;padding-block:0;scrollbar-width:thin}
+.tab{border:0;background:none;padding:10px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;color:var(--muted);font-weight:600}
+.tab b{font-family:var(--font-data);font-weight:500;margin-right:6px;font-size:.8rem}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--ink)}
+
+main.wrap{padding-block:20px 48px}
+.screen{display:grid;gap:18px}
+.head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end}
+.head p{max-width:62ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;min-width:0}
+.split{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px;align-items:start}
+.split.wide{grid-template-columns:minmax(0,1fr) minmax(0,380px)}
+@media (max-width:860px){.split,.split.wide{grid-template-columns:minmax(0,1fr)}}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.stack{display:grid;gap:10px}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stat{background:var(--surface);padding:12px 14px;display:grid;gap:2px}
+.stat .v{font-family:var(--font-data);font-size:1.5rem;font-weight:500}
+.stat.warn .v{color:var(--warn)} .stat.crit .v{color:var(--crit)} .stat.ok .v{color:var(--ok)}
+
+/* status pills */
+.pill{display:inline-block;border-radius:4px;padding:1px 7px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-low{background:var(--warn-soft);color:var(--warn)}
+.p-sup,.p-miss{background:var(--crit-soft);color:var(--crit)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+
+/* tables */
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--accent-soft)}
+tr.sel td{background:var(--accent-soft)}
+
+/* lineage */
+.lineage{display:flex;flex-wrap:wrap;gap:0;align-items:stretch}
+.step{flex:1 1 150px;padding:10px 12px;border:1px solid var(--line);margin:-1px 0 0 -1px;background:var(--surface);min-width:0}
+.step .mono{font-size:.78rem;word-break:break-all}
+.step.on{border-color:var(--accent);position:relative;z-index:1}
+
+/* map */
+.map svg{width:100%;height:auto;max-height:640px;display:block}
+.map .muni{cursor:pointer;stroke:var(--surface);stroke-width:1.2}
+.map .muni:hover{stroke:var(--ink)}
+.map .muni.sel{stroke:var(--ink);stroke-width:2.5}
+.map .muni.hi{stroke:var(--accent);stroke-width:3}
+.map .na{fill:var(--surface);stroke:var(--muted);stroke-dasharray:2 2}
+.q0{fill:var(--q0)}.q1{fill:var(--q1)}.q2{fill:var(--q2)}.q3{fill:var(--q3)}.q4{fill:var(--q4)}
+.c-HH{fill:var(--q4)}.c-LL{fill:var(--crit)}.c-HL,.c-LH{fill:var(--warn)}.c-ns{fill:var(--hatch)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);align-items:center}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-2px;margin-right:4px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;background:var(--surface);padding:6px 10px;cursor:pointer;font-size:.85rem;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* bars */
+.bars{display:grid;gap:6px}
+.bar-row{display:grid;grid-template-columns:90px 1fr 56px;gap:8px;align-items:center;font-size:.85rem}
+.track{height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--accent)}
+.fill.ref{background:var(--hatch)}
+.stackbar{display:flex;height:12px;width:140px;background:var(--bg);border-radius:3px;overflow:hidden}
+.stackbar span{display:block;height:100%}
+.k1{background:var(--q4)}.k2{background:var(--q2)}.k3{background:var(--warn)}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:.88rem}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{padding:3px 9px;font-size:.8rem}
+input[type=range]{accent-color:var(--accent);width:100%}
+select{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:5px 8px}
+.slider{display:grid;grid-template-columns:150px 1fr 44px;gap:10px;align-items:center}
+@media (max-width:520px){.slider{grid-template-columns:1fr 44px}.slider label{grid-column:1/-1}}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.9rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-family:var(--font-data);font-variant-numeric:tabular-nums}
+.note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:.88rem}
+.note.info{border-color:var(--accent);background:var(--accent-soft)}
+
+/* planner cards */
+.pick{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
+.pick:last-child{border-bottom:0}
+.rank{font-family:var(--font-data);font-size:1.1rem;color:var(--accent)}
+@media (max-width:520px){.pick{grid-template-columns:28px minmax(0,1fr)}.pick .acts{grid-column:2}}
+
+/* brief */
+.brief{position:relative;background:var(--surface);border:1px solid var(--line);padding:28px;max-width:780px;overflow:hidden}
+.brief::after{content:"SYNTHETIC DATA";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:clamp(2.2rem,8vw,4.6rem);color:var(--syn);opacity:.16;transform:rotate(-24deg);pointer-events:none}
+.brief header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:14px}
+.brief h2{font-size:1.6rem}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.prov{font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);margin-top:16px;padding-top:8px;font-family:var(--font-data)}
+.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:6px;font-weight:600;z-index:20}
+@media (prefers-reduced-motion:no-preference){.fill,.stackbar span{transition:width .25s ease}}
+</style>
+
+<div class="top">
+  <div class="wrap bar">
+    <div class="brand"><h1>PULSE</h1><span>PSHS-CRC · NCE outreach · Caraga</span></div>
+    <div class="ver"><span class="chip mono">dataset v2026.10.16-syn</span><span class="chip">Cycles 2025 · 2026</span><span class="chip">Planner: J. Tordos</span></div>
+  </div>
+  <div class="syn"><div class="wrap"><span>SYNTHETIC DATA</span><span style="font-weight:600">Generated with seed 2026 for the mockup. Not real NCE figures. Approximate town centers stand in for PSGC boundary polygons.</span></div></div>
+  <nav class="wrap tabs" role="tablist" id="tabs"></nav>
+</div>
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+// ---------- reference geography (approximate town centers) ----------
+const PROV={ADN:{n:"Agusan del Norte",c:"1602"},ADS:{n:"Agusan del Sur",c:"1603"},SDN:{n:"Surigao del Norte",c:"1667"},SDS:{n:"Surigao del Sur",c:"1668"},DI:{n:"Dinagat Islands",c:"1685"}};
+const RAW=[
+["ADN","Butuan City",8.949,125.543],["ADN","Cabadbaran City",9.123,125.535],["ADN","Buenavista",8.977,125.409],["ADN","Carmen",8.99,125.29],["ADN","Jabonga",9.343,125.516],["ADN","Kitcharao",9.457,125.574],["ADN","Las Nieves",8.736,125.601],["ADN","Magallanes",9.021,125.518],["ADN","Nasipit",8.968,125.34],["ADN","Remedios T. Romualdez",9.055,125.585],["ADN","Santiago",9.264,125.56],["ADN","Tubay",9.165,125.523],
+["ADS","Bayugan City",8.713,125.749],["ADS","Bunawan",8.178,125.994],["ADS","Esperanza",8.676,125.646],["ADS","La Paz",8.287,125.806],["ADS","Loreto",8.186,125.854],["ADS","Prosperidad",8.606,125.915],["ADS","Rosario",8.379,125.999],["ADS","San Francisco",8.506,125.977],["ADS","San Luis",8.494,125.735],["ADS","Santa Josefa",7.994,126.031],["ADS","Sibagat",8.822,125.692],["ADS","Talacogon",8.456,125.787],["ADS","Trento",8.046,126.063],["ADS","Veruela",8.073,125.956],
+["SDN","Surigao City",9.784,125.489],["SDN","Alegria",9.5,125.6],["SDN","Bacuag",9.608,125.64],["SDN","Burgos",10.009,126.074],["SDN","Claver",9.573,125.733],["SDN","Dapa",9.759,126.051],["SDN","Del Carmen",9.868,125.97],["SDN","General Luna",9.784,126.157],["SDN","Gigaquit",9.594,125.698],["SDN","Mainit",9.537,125.523],["SDN","Malimono",9.618,125.402],["SDN","Pilar",9.864,126.1],["SDN","Placer",9.657,125.601],["SDN","San Benito",9.958,126.007],["SDN","San Francisco",9.728,125.418],["SDN","San Isidro",9.937,126.088],["SDN","Santa Monica",10.02,126.037],["SDN","Sison",9.659,125.529],["SDN","Socorro",9.621,125.967],["SDN","Tagana-an",9.699,125.583],["SDN","Tubod",9.553,125.57],
+["SDS","Barobo",8.53,126.12],["SDS","Bayabas",8.968,126.255],["SDS","Bislig City",8.212,126.318],["SDS","Cagwait",8.918,126.302],["SDS","Cantilan",9.335,125.977],["SDS","Carmen",9.305,125.995],["SDS","Carrascal",9.369,125.95],["SDS","Cortes",9.273,126.19],["SDS","Hinatuan",8.373,126.336],["SDS","Lanuza",9.232,126.059],["SDS","Lianga",8.633,126.093],["SDS","Lingig",8.038,126.413],["SDS","Madrid",9.262,125.965],["SDS","Marihatag",8.8,126.299],["SDS","San Agustin",8.72,126.19],["SDS","San Miguel",8.93,126.0],["SDS","Tagbina",8.45,126.16],["SDS","Tago",9.02,126.232],["SDS","Tandag City",9.078,126.198],
+["DI","Basilisa",10.065,125.601],["DI","Cagdianao",9.917,125.672],["DI","Dinagat",10.127,125.606],["DI","Libjo",10.198,125.533],["DI","Loreto",10.362,125.581],["DI","San Jose",10.008,125.573],["DI","Tubajon",10.324,125.556]];
+const CAMPUS={lat:8.949,lon:125.543,name:"PSHS-CRC, Butuan City"};
+const ISLAND=new Set(["Burgos","Dapa","Del Carmen","General Luna","Pilar","San Benito","San Isidro","Santa Monica","Socorro"]);
+const RAWNAME={"Remedios T. Romualdez":"R.T. Romualdez","Tagana-an":"Taganaan","Santa Josefa":"Sta. Josefa","Butuan City":"Butuan"};
+const DECLINE=new Set(["Lingig","Bunawan","Malimono","Cagwait","Esperanza"]);
+
+// ---------- synthetic generator (seeded) ----------
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(2026);
+function km(a,b){const r=Math.PI/180,dLa=(b.lat-a.lat)*r,dLo=(b.lon-a.lon)*r,h=Math.sin(dLa/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLo/2)**2;return 12742*Math.asin(Math.sqrt(h))}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const counters={};
+const M=RAW.map(([p,name,lat,lon],i)=>{
+  counters[p]=(counters[p]||0)+1;
+  const m={id:i,prov:p,name,lat,lon,psgc:PROV[p].c+String(counters[p]*2).padStart(2,"0")+"000"};
+  const city=/City$/.test(name);
+  m.pop6=name==="Butuan City"?7400:city?Math.round(1800+R()*1600):Math.round((p==="DI"?240:360)+R()*(p==="DI"?520:1250));
+  m.dist=km(CAMPUS,m);
+  const island=p==="DI"||ISLAND.has(name);
+  let rate=34*Math.exp(-m.dist/110)+6+(R()-.5)*9+(name==="Butuan City"?10:0);rate=clamp(rate,2.5,60);
+  m.a26=Math.round(m.pop6*rate/1000);
+  const att=clamp(.92-(island?.17:0)-m.dist/1600+(R()-.5)*.12,.45,.98);
+  m.e26=Math.round(m.a26*att);
+  m.q26=Math.round(m.e26*(.06+R()*.09+(m.dist<40?.06:0)));
+  m.a25=Math.round(m.a26*(DECLINE.has(name)?1.42+R()*.1:1+(R()-.45)*.28));
+  m.e25=Math.round(m.a25*clamp(att+(R()-.5)*.08,.4,.98));
+  m.raw=RAWNAME[name]||name;
+  m.dup=RAW.filter(r=>r[1]===name).length>1;
+  return m;});
+const by=n=>M.find(m=>m.name===n);
+// planted data-quality cases
+Object.assign(by("Libjo"),{a26:4,e26:3,q26:0});
+Object.assign(M.find(m=>m.name==="Loreto"&&m.prov==="DI"),{a26:11,e26:8,q26:1});
+Object.assign(by("Santa Josefa"),{a26:null,e26:null,q26:null});
+Object.assign(by("Tubajon"),{a26:13,e26:9,q26:1});
+
+// ---------- indicators ----------
+M.forEach(m=>{
+  if(m.a26==null){m.status="miss";return}
+  m.rate=m.a26/m.pop6*1000; m.att=m.e26/m.a26; m.chg=(m.a26-m.a25)/m.a25;
+  m.status=m.a26<5?"sup":m.a26<15?"low":"ok";
+});
+const STATUS={ok:["Complete","p-ok"],low:["Low sample","p-low"],sup:["Suppressed (<5)","p-sup"],miss:["Missing 2026","p-miss"]};
+const elig=()=>M.filter(m=>m.status==="ok");
+function pct(arr,v){let below=0;arr.forEach(x=>{if(x<v)below++});return below/(arr.length-1||1)}
+const rates=elig().map(m=>m.rate), atts=elig().map(m=>m.att);
+elig().forEach(m=>{m.cPart=1-pct(rates,m.rate);m.cAtt=1-pct(atts,m.att);m.cDec=clamp(-m.chg/.35,0,1)});
+function scoreWith(w){const s=w.p+w.a+w.d||1;const out=elig().map(m=>({m,s:100*(w.p*m.cPart+w.a*m.cAtt+w.d*m.cDec)/s}));out.sort((x,y)=>y.s-x.s);return out}
+const PRESETS={"Balanced":{p:.34,a:.33,d:.33},"Reach first":{p:.6,a:.2,d:.2},"Attendance first":{p:.25,a:.55,d:.2}};
+// neighbors (k=4) and local Moran's I on application rate
+const pool=M.filter(m=>m.status==="ok"||m.status==="low");
+const mu=pool.reduce((s,m)=>s+m.rate,0)/pool.length, sd=Math.sqrt(pool.reduce((s,m)=>s+(m.rate-mu)**2,0)/pool.length);
+pool.forEach(m=>{m.nb=pool.filter(o=>o!==m).sort((a,b)=>km(m,a)-km(m,b)).slice(0,4)});
+pool.forEach(m=>{const z=(m.rate-mu)/sd,lag=m.nb.reduce((s,o)=>s+(o.rate-mu)/sd,0)/4;m.lisa=z*lag;
+  m.cl=Math.abs(m.lisa)<.35?"ns":(z>0?(lag>0?"HH":"HL"):(lag>0?"LH":"LL"))});
+const nearby=(m,r)=>M.filter(o=>o!==m&&km(m,o)<=r).sort((a,b)=>km(m,a)-km(m,b));
+
+// ---------- state ----------
+const S={tab:"trust",metric:"rate",sel:by("Bunawan").id,w:{...PRESETS["Balanced"]},k:5,dec:{},reg:[]};
+const TABS=[["trust","Data trust"],["map","Map"],["pipe","Pipeline"],["prio","Priority list"],["plan","Outreach planner"],["brief","Brief & register"]];
+const f1=v=>v==null?"—":v.toFixed(1), pc=v=>v==null?"—":Math.round(v*100)+"%", sg=v=>v==null?"—":(v>0?"+":"")+Math.round(v*100)+"%";
+const show=(m,v)=>m.status==="sup"?"<5":m.status==="miss"?"—":v;
+const pill=m=>`<span class="pill ${STATUS[m.status][1]}">${STATUS[m.status][0]}</span>`;
+const ranked=()=>scoreWith(S.w);
+function rankOf(m){const r=ranked().findIndex(x=>x.m===m);return r<0?null:r+1}
+function stability(m){const rs=Object.values(PRESETS).map(w=>scoreWith(w).findIndex(x=>x.m===m)+1);return {lo:Math.min(...rs),hi:Math.max(...rs)}}
+function focus(m){const w=S.w,c=[["Information and application campaign",w.p*m.cPart],["Exam reminder and access review",w.a*m.cAtt],["Follow-up with feeder schools on the decline",w.d*m.cDec]];c.sort((a,b)=>b[1]-a[1]);return c[0][0]}
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200)}
+
+// ---------- map ----------
+const S0=230,LON0=125.2,LAT1=10.45,COS=Math.cos(9.2*Math.PI/180);
+const px=m=>[(m.lon-LON0)*COS*S0+8,(LAT1-m.lat)*S0+10];
+function hull(pts){pts=pts.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[],up=[];for(const p of pts){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}for(const p of pts.slice().reverse()){while(up.length>=2&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}return lo.slice(0,-1).concat(up.slice(0,-1))}
+const METRICS={rate:["Applications per 1,000 Grade 6",m=>m.rate,f1],att:["Exam attendance",m=>m.att,pc],chg:["Change vs 2025",m=>m.chg,sg],score:["Priority score",m=>{const r=ranked().find(x=>x.m===m);return r?r.s:null},f1],lisa:["Spatial clusters",null,null]};
+function breaks(vals){const v=vals.filter(x=>x!=null).sort((a,b)=>a-b);return [.2,.4,.6,.8].map(q=>v[Math.floor(q*(v.length-1))])}
+function mapSVG({metric=S.metric,hi=new Set(),small=false}={}){
+  const geo=Object.keys(PROV).map(p=>{const pts=M.filter(m=>m.prov===p).map(px);const h=hull(pts);const cx=pts.reduce((s,q)=>s+q[0],0)/pts.length,cy=pts.reduce((s,q)=>s+q[1],0)/pts.length;
+    return `<path d="M${h.map(q=>q.map(n=>n.toFixed(1)).join(",")).join("L")}Z" fill="var(--land)" stroke="var(--land)" stroke-width="34" stroke-linejoin="round"/>`+
+    (small?"":`<text x="${cx.toFixed(0)}" y="${(cy).toFixed(0)}" text-anchor="middle" font-size="9" letter-spacing="1.5" fill="var(--muted)" opacity=".8" style="text-transform:uppercase;font-family:var(--font-body);font-weight:600">${PROV[p].n.toUpperCase()}</text>`)}).join("");
+  let cls;
+  if(metric==="lisa"){cls=m=>m.cl?"c-"+m.cl:null}
+  else{const fn=METRICS[metric][1],b=breaks(M.map(m=>m.status==="ok"||m.status==="low"?fn(m):null));cls=m=>{if(m.status==="sup"||m.status==="miss")return null;const v=fn(m);if(v==null)return null;let q=0;b.forEach(x=>{if(v>x)q++});return "q"+q}}
+  const maxA=Math.max(...M.map(m=>m.a26||0));
+  const dots=M.map(m=>{const[x,y]=px(m),c=cls(m),r=small?5:clamp(4+11*Math.sqrt((m.a26||9)/maxA),4.5,15);
+    const k=["muni",c||"na",m.id===S.sel?"sel":"",hi.has(m.id)?"hi":""].join(" ");
+    return `<circle class="${k}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" data-act="sel" data-id="${m.id}"><title>${m.name}, ${PROV[m.prov].n}</title></circle>`}).join("");
+  const [cx,cy]=px(CAMPUS);
+  const sel=M[S.sel],[sx,sy]=px(sel);
+  const lbl=small?"":`<text x="${(sx+12).toFixed(0)}" y="${(sy+4).toFixed(0)}" font-size="11" font-weight="700" fill="var(--ink)" paint-order="stroke" stroke="var(--bg)" stroke-width="3" style="font-family:var(--font-body)">${sel.name}</text>`;
+  return `<svg viewBox="0 0 310 600" role="img" aria-label="Map of Caraga municipalities"><rect width="310" height="600" fill="var(--sea)"/>${geo}${dots}
+  <g transform="translate(${cx.toFixed(1)},${cy.toFixed(1)})"><path d="M0,-8 L2.4,-2.4 8,-2.4 3.6,1.2 5,7 0,3.6 -5,7 -3.6,1.2 -8,-2.4 -2.4,-2.4Z" fill="var(--ink)" stroke="var(--bg)" stroke-width="1"/></g>${lbl}
+  ${small?"":`<text x="10" y="590" font-size="9" fill="var(--muted)" style="font-family:var(--font-data)">★ PSHS-CRC campus · dot size = 2026 applicants</text>`}</svg>`}
+function legend(metric){
+  if(metric==="lisa")return `<div class="legend"><span><i class="sw" style="background:var(--crit)"></i>Cold spot (low, among low)</span><span><i class="sw" style="background:var(--q4)"></i>Hot spot</span><span><i class="sw" style="background:var(--warn)"></i>Outlier</span><span><i class="sw" style="background:var(--hatch)"></i>No clear pattern</span></div>`;
+  const fn=METRICS[metric][1],fmt=METRICS[metric][2],b=breaks(M.map(m=>m.status==="ok"||m.status==="low"?fn(m):null));
+  return `<div class="legend">${[0,1,2,3,4].map(i=>`<span><i class="sw" style="background:var(--q${i})"></i>${i===0?"≤ "+fmt(b[0]):i===4?"> "+fmt(b[3]):fmt(b[i-1])+"–"+fmt(b[i])}</span>`).join("")}<span><i class="sw" style="background:var(--surface);border:1px dashed var(--muted)"></i>Not shown (suppressed or missing)</span></div>`}
+
+function funnel(m){
+  const reg=M.filter(x=>x.status!=="miss"&&x.status!=="sup");const RA=reg.reduce((s,x)=>s+x.a26,0),RE=reg.reduce((s,x)=>s+x.e26,0),RQ=reg.reduce((s,x)=>s+x.q26,0);
+  if(m.status==="sup"||m.status==="miss")return `<p class="note">Counts are ${m.status==="sup"?"suppressed because a cell is below 5":"missing for the 2026 cycle"}. PULSE does not chart or rank this municipality.</p>`;
+  const rows=[["Applied",m.a26,1,1],["Examined",m.e26,m.e26/m.a26,RE/RA],["Qualified",m.q26,m.q26/m.a26,RQ/RA]];
+  return `<div class="bars">${rows.map(r=>`<div class="bar-row"><span>${r[0]}</span><div class="track" title="Region: ${pc(r[3])}"><div class="fill" style="width:${(r[2]*100).toFixed(1)}%"></div></div><span class="num" style="text-align:right">${r[1]}</span></div>
+  <div class="bar-row small muted"><span>Region</span><div class="track" style="height:6px"><div class="fill ref" style="width:${(r[3]*100).toFixed(1)}%"></div></div><span class="num" style="text-align:right">${pc(r[3])}</span></div>`).join("")}</div>
+  <p class="small muted" style="margin-top:6px">Qualification is shown as context only. It reflects a selective exam, not access.</p>`}
+
+function detail(m){
+  const r=rankOf(m);
+  return `<div class="stack"><div class="row" style="justify-content:space-between"><div><h3 style="font-size:1.25rem">${m.name}</h3><span class="muted small">${PROV[m.prov].n} · PSGC <span class="mono">${m.psgc}</span></span></div>${pill(m)}</div>
+  <dl class="kv"><dt>Applicants 2026 / 2025</dt><dd>${show(m,m.a26)} / ${m.a25}</dd><dt>Examinees 2026</dt><dd>${show(m,m.e26)}</dd>
+  <dt>Grade 6 learners</dt><dd>${m.pop6.toLocaleString()}</dd><dt>Applications per 1,000</dt><dd>${m.status==="ok"||m.status==="low"?f1(m.rate):"—"}</dd>
+  <dt>Exam attendance</dt><dd>${m.status==="ok"||m.status==="low"?pc(m.att):"—"}</dd><dt>Change vs 2025</dt><dd>${m.status==="ok"||m.status==="low"?sg(m.chg):"—"}</dd>
+  <dt>Straight-line to campus</dt><dd>${Math.round(m.dist)} km <span class="muted">(context only)</span></dd><dt>Priority rank</dt><dd>${r?"#"+r+" of "+elig().length:"Not ranked"}</dd></dl>
+  ${funnel(m)}
+  <div class="row"><button class="btn pri" data-act="go" data-tab="brief">Open evidence brief</button><button class="btn" data-act="go" data-tab="pipe">Compare in pipeline</button></div></div>`}
+
+// ---------- screens ----------
+const V={};
+V.trust=()=>{
+  const n=M.length,miss=M.filter(m=>m.status==="miss").length,sup=M.filter(m=>m.status==="sup").length,low=M.filter(m=>m.status==="low").length,fixed=M.filter(m=>m.raw!==m.name).length,dup=M.filter(m=>m.dup).length;
+  const provRows=Object.keys(PROV).map(p=>{const ms=M.filter(m=>m.prov===p&&m.a26!=null);const a=ms.reduce((s,m)=>s+m.a26,0),e=ms.reduce((s,m)=>s+m.e26,0);
+    return `<tr><td>${PROV[p].n}</td><td class="num">${M.filter(m=>m.prov===p).length}</td><td class="num">${a.toLocaleString()}</td><td class="num">${a.toLocaleString()}</td><td class="num">${e.toLocaleString()}</td><td><span class="pill p-ok">Reconciles</span></td></tr>`}).join("");
+  const issues=M.filter(m=>m.raw!==m.name||m.dup||m.status!=="ok").map(m=>{
+    const what=m.raw!==m.name?`Source name <span class="mono">“${m.raw}”</span> matched by alias table`:m.dup?`Name shared with another province; matched using province column`:m.status==="miss"?"No 2026 row in source file":m.status==="sup"?"Applicant count below 5; values withheld":"Fewer than 15 applicants; shown but not ranked";
+    return `<tr class="click" data-act="sel" data-id="${m.id}"><td>${m.name}</td><td>${PROV[m.prov].n}</td><td>${what}</td><td>${pill(m)}</td></tr>`}).join("");
+  return `<div class="head"><div><span class="label">Step 1 · Before any map</span><h2>Can we trust this dataset?</h2><p class="muted">Every municipality is matched to its PSGC code and every total is checked against the custodian's approved figures before anything is mapped or ranked.</p></div></div>
+  <div class="stats"><div class="stat ok"><span class="label">Matched to PSGC</span><span class="v">${n}/${n}</span></div><div class="stat"><span class="label">Name fixes</span><span class="v">${fixed}</span></div><div class="stat"><span class="label">Shared names resolved</span><span class="v">${dup}</span></div><div class="stat warn"><span class="label">Low sample</span><span class="v">${low}</span></div><div class="stat crit"><span class="label">Suppressed</span><span class="v">${sup}</span></div><div class="stat crit"><span class="label">Missing 2026</span><span class="v">${miss}</span></div></div>
+  <div class="panel"><h3 style="margin-bottom:10px">Data lineage</h3><div class="lineage">
+   <div class="step"><span class="label">Source</span><div>GATES Lakehouse</div><div class="mono muted">synthetic.nce_muni_agg</div></div>
+   <div class="step"><span class="label">Validate</span><div>Schema + suppression rules</div><div class="mono muted">rules v1.2 · 14 checks</div></div>
+   <div class="step"><span class="label">Geography</span><div>PSGC match + boundaries</div><div class="mono muted">PSGC 2025Q4</div></div>
+   <div class="step"><span class="label">Indicators</span><div>Rates, trend, clusters</div><div class="mono muted">formulas v1.0</div></div>
+   <div class="step on"><span class="label">Dataset</span><div>Ready for planning</div><div class="mono muted">v2026.10.16-syn · sha 3f9a…c21</div></div></div></div>
+  <div class="split wide"><div class="panel"><h3 style="margin-bottom:6px">Reconciliation with approved totals (2026 applicants)</h3><div class="tbl"><table><thead><tr><th>Province</th><th class="num">Munis</th><th class="num">PULSE sum</th><th class="num">Custodian</th><th class="num">Examinees</th><th>Check</th></tr></thead><tbody>${provRows}</tbody></table></div></div>
+  <div class="panel"><h3 style="margin-bottom:6px">Rules applied</h3><ul class="small" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Missing values are never treated as zero.</li><li>Counts below 5 are withheld and not mapped.</li><li>Under 15 applicants: mapped, not ranked.</li><li>Qualification is context, not evidence of access barriers.</li><li>Distance is straight-line and context only.</li></ul></div></div>
+  <div class="panel"><h3 style="margin-bottom:6px">Records that needed attention</h3><div class="tbl"><table><thead><tr><th>Municipality</th><th>Province</th><th>What happened</th><th>Status</th></tr></thead><tbody>${issues}</tbody></table></div></div>`};
+
+V.map=()=>`<div class="head"><div><span class="label">Step 2 · Where</span><h2>Participation across Caraga, 2026 cycle</h2><p class="muted">Select a municipality to see its counts, rates and data status.</p></div>
+  <div class="seg" role="group" aria-label="Map metric">${Object.entries(METRICS).map(([k,v])=>`<button data-act="metric" data-k="${k}" aria-pressed="${S.metric===k}">${v[0]}</button>`).join("")}</div></div>
+  <div class="split"><div class="panel map">${mapSVG()}${legend(S.metric)}${S.metric==="lisa"?`<p class="small muted" style="margin-top:6px">Local Moran's I on applications per 1,000, four nearest neighbours. The real build adds a permutation test before calling a cluster.</p>`:""}</div>
+  <div class="panel">${detail(M[S.sel])}</div></div>`;
+
+V.pipe=()=>{
+  const pts=M.filter(m=>m.status==="ok"||m.status==="low");const W=560,H=360,P=44;
+  const xs=pts.map(m=>m.rate),ys=pts.map(m=>m.att);const xmax=Math.ceil(Math.max(...xs)/10)*10,ymin=Math.floor(Math.min(...ys)*10)/10;
+  const X=v=>P+(v/xmax)*(W-P-12),Y=v=>12+(1-(v-ymin)/(1-ymin))*(H-P-12);
+  const med=a=>{const s=a.slice().sort((x,y)=>x-y);return s[Math.floor(s.length/2)]};const mx=med(xs),my=med(ys);
+  const ticksX=[];for(let t=0;t<=xmax;t+=10)ticksX.push(t);const ticksY=[];for(let t=Math.round(ymin*10);t<=10;t++)ticksY.push(t/10);
+  const svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Applications versus attendance">
+   <rect x="${P}" y="${Y(my)}" width="${X(mx)-P}" height="${Y(ymin)-Y(my)}" fill="var(--crit-soft)"/>
+   ${ticksX.map(t=>`<line x1="${X(t)}" x2="${X(t)}" y1="12" y2="${H-P}" stroke="var(--line)"/><text x="${X(t)}" y="${H-P+16}" font-size="11" text-anchor="middle" fill="var(--muted)" font-family="var(--font-data)">${t}</text>`).join("")}
+   ${ticksY.map(t=>`<line x1="${P}" x2="${W-12}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--line)"/><text x="${P-6}" y="${Y(t)+4}" font-size="11" text-anchor="end" fill="var(--muted)" font-family="var(--font-data)">${Math.round(t*100)}%</text>`).join("")}
+   <line x1="${X(mx)}" x2="${X(mx)}" y1="12" y2="${H-P}" stroke="var(--muted)" stroke-dasharray="4 3"/><line x1="${P}" x2="${W-12}" y1="${Y(my)}" y2="${Y(my)}" stroke="var(--muted)" stroke-dasharray="4 3"/>
+   <text x="${P+6}" y="26" font-size="11" fill="var(--muted)">Few apply, most sit the exam</text><text x="${W-16}" y="26" font-size="11" text-anchor="end" fill="var(--muted)">Strong on both</text>
+   <text x="${P+6}" y="${H-P-8}" font-size="11" font-weight="700" fill="var(--crit)">Low on both</text><text x="${W-16}" y="${H-P-8}" font-size="11" text-anchor="end" fill="var(--muted)">Many apply, many miss the exam</text>
+   ${pts.map(m=>`<circle cx="${X(m.rate).toFixed(1)}" cy="${Y(m.att).toFixed(1)}" r="${m.id===S.sel?7:4.5}" fill="${m.status==="low"?"var(--surface)":"var(--accent)"}" stroke="${m.id===S.sel?"var(--ink)":"var(--accent)"}" stroke-width="${m.id===S.sel?2.5:1.2}" style="cursor:pointer" data-act="sel" data-id="${m.id}"><title>${m.name}: ${f1(m.rate)} per 1,000, ${pc(m.att)} attended</title></circle>`).join("")}
+   <text x="${(W+P)/2}" y="${H-6}" font-size="11" text-anchor="middle" fill="var(--muted)">Applications per 1,000 Grade 6 learners</text></svg>`;
+  return `<div class="head"><div><span class="label">Step 3 · Which stage</span><h2>Is the gap in applying or in sitting the exam?</h2><p class="muted">The same low numbers can need different action. Low applications call for information campaigns. Low attendance calls for reminders and an access review.</p></div></div>
+  <div class="split wide"><div class="panel">${svg}<p class="small muted">Dashed lines are regional medians. Hollow dots have fewer than 15 applicants.</p></div><div class="panel">${detail(M[S.sel])}</div></div>`};
+
+V.prio=()=>{
+  const rk=ranked();const K=S.k;
+  const rows=rk.map((x,i)=>{const m=x.m,st=stability(m),w=S.w,s=w.p+w.a+w.d||1,stable=st.hi<=Math.max(10,K)&&st.hi-st.lo<=4;
+    return `<tr class="click ${m.id===S.sel?"sel":""}" data-act="sel" data-id="${m.id}"><td class="num mono">${i+1}</td><td><b>${m.name}</b><div class="small muted">${PROV[m.prov].n}</div></td>
+    <td><div class="row" style="gap:8px;flex-wrap:nowrap"><span class="num" style="width:34px">${x.s.toFixed(0)}</span><div class="stackbar" title="Reach ${(100*w.p*m.cPart/s).toFixed(0)} · Attendance ${(100*w.a*m.cAtt/s).toFixed(0)} · Decline ${(100*w.d*m.cDec/s).toFixed(0)}"><span class="k1" style="width:${100*w.p*m.cPart/s}%"></span><span class="k2" style="width:${100*w.a*m.cAtt/s}%"></span><span class="k3" style="width:${100*w.d*m.cDec/s}%"></span></div></div></td>
+    <td class="num">${f1(m.rate)}</td><td class="num">${pc(m.att)}</td><td class="num">${sg(m.chg)}</td><td><span class="pill ${stable?"p-ok":"p-low"}">${stable?"Stable":"Sensitive"}</span> <span class="small muted mono">#${st.lo}–${st.hi}</span></td><td class="small">${focus(m)}</td></tr>`}).join("");
+  const out=M.filter(m=>m.status!=="ok").map(m=>`<span class="chip">${m.name} ${pill(m)}</span>`).join(" ");
+  const sl=(k,l)=>`<div class="slider"><label for="w-${k}">${l}</label><input id="w-${k}" type="range" min="0" max="100" value="${Math.round(S.w[k]*100)}" data-act="w" data-k="${k}"><span class="num">${Math.round(S.w[k]*100)}</span></div>`;
+  return `<div class="head"><div><span class="label">Step 4 · Who first</span><h2>Explainable outreach priority</h2><p class="muted">Weights are planning preferences, not predictions. Move them and watch which places hold their rank.</p></div></div>
+  <div class="split"><div class="panel stack"><h3>Weights</h3>${sl("p","Low applications")}${sl("a","Low attendance")}${sl("d","Decline vs 2025")}
+   <div class="row">${Object.keys(PRESETS).map(n=>`<button class="btn sm" data-act="preset" data-k="${n}">${n}</button>`).join("")}</div>
+   <div class="legend"><span><i class="sw k1"></i>Reach</span><span><i class="sw k2"></i>Attendance</span><span><i class="sw k3"></i>Decline</span></div>
+   <p class="small muted"><b>Stable</b> means the municipality stays within a narrow rank band across all three presets.</p>
+   <div class="stack"><span class="label">Not ranked (${M.filter(m=>m.status!=="ok").length})</span><div class="row">${out}</div></div></div>
+  <div class="panel"><div class="tbl"><table><thead><tr><th class="num">#</th><th>Municipality</th><th>Score</th><th class="num">Apps/1k</th><th class="num">Attend</th><th class="num">Δ 2025</th><th>Rank band</th><th>Suggested focus</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`};
+
+V.plan=()=>{
+  const rk=ranked(),top=rk.slice(0,S.k),hi=new Set(top.map(x=>x.m.id));
+  const picks=top.map((x,i)=>{const m=x.m,d=S.dec[m.id],nb=nearby(m,28).filter(o=>o.status!=="miss").slice(0,3);
+    return `<div class="pick"><span class="rank">${i+1}</span><div style="min-width:0"><b>${m.name}</b> <span class="muted small">${PROV[m.prov].n} · score ${x.s.toFixed(0)}</span>
+    <div class="small">${focus(m)}</div>${nb.length?`<div class="small muted">Can be grouped with: ${nb.map(o=>`${o.name} (${Math.round(km(m,o))} km)`).join(", ")}</div>`:""}
+    ${d?`<div class="small" style="margin-top:4px"><span class="pill ${d.s==="Accepted"?"p-acc":"p-low"}">${d.s}</span> <span class="muted">${d.r}</span></div>`:""}</div>
+    <div class="acts stack" style="gap:6px"><select id="why-${m.id}" aria-label="Reason for ${m.name}"><option>Matches local knowledge</option><option>Already served this cycle</option><option>Data looks off; verify first</option><option>Combine with neighbour trip</option></select>
+    <div class="row" style="gap:6px"><button class="btn sm pri" data-act="dec" data-id="${m.id}" data-s="Accepted">Accept</button><button class="btn sm" data-act="dec" data-id="${m.id}" data-s="Deferred">Defer</button></div></div></div>`}).join("");
+  const acc=Object.values(S.dec).filter(d=>d.s==="Accepted").length;
+  return `<div class="head"><div><span class="label">Step 5 · Decide</span><h2>How many municipalities can we serve this cycle?</h2><p class="muted">PULSE suggests a shortlist. Staff accept or defer each one and record why.</p></div></div>
+  <div class="split"><div class="panel stack"><div class="slider"><label for="k">Outreach slots</label><input id="k" type="range" min="1" max="12" value="${S.k}" data-act="k"><span class="num">${S.k}</span></div>
+   <div class="map">${mapSVG({metric:"score",hi,small:true})}</div><p class="small muted">Highlighted: suggested shortlist.</p></div>
+  <div class="panel"><div class="row" style="justify-content:space-between"><h3>Suggested shortlist</h3><span class="chip">${acc} accepted · ${S.reg.length} in register</span></div>${picks}</div></div>`};
+
+V.brief=()=>{
+  const m=M[S.sel],r=ranked().find(x=>x.m===m),w=S.w,s=w.p+w.a+w.d||1,nb=nearby(m,28).slice(0,3);
+  const opts=M.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(o=>`<option value="${o.id}" ${o.id===m.id?"selected":""}>${o.name} (${PROV[o.prov].n})</option>`).join("");
+  const reg=S.reg.length?S.reg.map((e,i)=>`<tr><td>${e.date}</td><td><b>${e.name}</b></td><td class="small">${e.action}</td><td>PSHS-CRC Outreach</td><td><span class="pill ${e.done?"p-ok":"p-acc"}">${e.done?"Completed":"Planned"}</span></td><td>${e.done?"":`<button class="btn sm" data-act="done" data-i="${i}">Mark completed</button>`}</td></tr>`).join(""):`<tr><td colspan="6" class="muted">No actions yet. Accept a municipality in the Outreach planner to add it here.</td></tr>`;
+  return `<div class="head"><div><span class="label">Step 6 · Document</span><h2>Evidence brief and action register</h2><p class="muted">One page per municipality, printed for planning meetings. Every number carries its source and version.</p></div>
+  <label class="row small" for="bsel">Municipality <select id="bsel" data-act="bsel">${opts}</select></label></div>
+  <article class="brief"><header><div><span class="label">PULSE evidence brief · NCE 2026 cycle</span><h2>${m.name}, ${PROV[m.prov].n}</h2><span class="mono small muted">PSGC ${m.psgc}</span></div><div style="text-align:right">${pill(m)}<div class="mono small" style="margin-top:6px">${r?"Priority #"+rankOf(m)+" of "+elig().length:"Not ranked"}</div></div></header>
+  <div class="bgrid"><section class="stack"><h3>What we observed</h3><dl class="kv"><dt>Applicants 2026</dt><dd>${show(m,m.a26)}</dd><dt>Applicants 2025</dt><dd>${m.a25}</dd><dt>Examinees 2026</dt><dd>${show(m,m.e26)}</dd><dt>Apps per 1,000 Gr 6</dt><dd>${m.status==="ok"||m.status==="low"?f1(m.rate):"—"}</dd><dt>Exam attendance</dt><dd>${m.status==="ok"||m.status==="low"?pc(m.att):"—"}</dd><dt>Change vs 2025</dt><dd>${m.status==="ok"||m.status==="low"?sg(m.chg):"—"}</dd></dl></section>
+  <section class="stack"><h3>Why it is on the list</h3>${r?`<dl class="kv"><dt>Reach component</dt><dd>${(100*w.p*m.cPart/s).toFixed(0)}</dd><dt>Attendance component</dt><dd>${(100*w.a*m.cAtt/s).toFixed(0)}</dd><dt>Decline component</dt><dd>${(100*w.d*m.cDec/s).toFixed(0)}</dd><dt>Total score</dt><dd>${r.s.toFixed(0)}</dd></dl>`:`<p class="note">This municipality is not ranked because its data is ${STATUS[m.status][0].toLowerCase()}. Verify with the custodian before planning.</p>`}</section></div>
+  <div class="bgrid" style="margin-top:16px"><section class="stack"><h3>Proposed action</h3><p>${r?focus(m):"Data verification with the PSHSS custodian"}.</p><dl class="kv"><dt>Responsible office</dt><dd style="font-family:var(--font-body)">PSHS-CRC Outreach</dd><dt>Next review</dt><dd>2027 NCE cycle</dd></dl></section>
+  <section class="stack"><h3>Limitations</h3><ul class="small" style="margin:0;padding-left:18px"><li>Municipal aggregates only; no individual records.</li><li>Grade 6 count is an approximate eligible population.</li><li>Straight-line distance to campus is ${Math.round(m.dist)} km and ignores travel routes.</li>${nb.length?`<li>Nearby for a combined trip: ${nb.map(o=>o.name).join(", ")}.</li>`:""}</ul></section></div>
+  <div class="prov">Source: GATES Lakehouse synthetic.nce_muni_agg · dataset v2026.10.16-syn · formulas v1.0 · weights ${Math.round(w.p*100)}/${Math.round(w.a*100)}/${Math.round(w.d*100)} · generated 2026-10-16 · decision support only, staff validation required</div></article>
+  <div class="panel"><h3 style="margin-bottom:6px">Action register</h3><div class="tbl"><table><thead><tr><th>Date</th><th>Municipality</th><th>Action</th><th>Office</th><th>Status</th><th></th></tr></thead><tbody>${reg}</tbody></table></div></div>`};
+
+// ---------- render + events ----------
+function render(){
+  document.getElementById("tabs").innerHTML=TABS.map(([k,l],i)=>`<button class="tab" role="tab" aria-selected="${S.tab===k}" data-act="go" data-tab="${k}"><b>${i+1}</b>${l}</button>`).join("");
+  document.getElementById("app").innerHTML=`<section class="screen">${V[S.tab]()}</section>`;
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-act]");if(!t)return;const a=t.dataset.act;
+  if(a==="go"){S.tab=t.dataset.tab;try{history.replaceState(null,"","#"+S.tab)}catch(_){}render();window.scrollTo({top:0})}
+  else if(a==="sel"){S.sel=+t.dataset.id;if(S.tab==="trust"||S.tab==="prio"){S.tab=S.tab==="trust"?"map":S.tab}render()}
+  else if(a==="metric"){S.metric=t.dataset.k;render()}
+  else if(a==="preset"){S.w={...PRESETS[t.dataset.k]};render()}
+  else if(a==="dec"){const id=+t.dataset.id,m=M[id],r=document.getElementById("why-"+id).value;S.dec[id]={s:t.dataset.s,r};
+    if(t.dataset.s==="Accepted"&&!S.reg.find(x=>x.id===id))S.reg.push({id,name:m.name,action:focus(m),date:"2026-10-16",done:false});
+    if(t.dataset.s!=="Accepted")S.reg=S.reg.filter(x=>x.id!==id);
+    render();toast(`${m.name}: ${t.dataset.s.toLowerCase()}`)}
+  else if(a==="done"){S.reg[+t.dataset.i].done=true;render();toast("Marked completed")}
+});
+document.addEventListener("input",e=>{
+  const t=e.target;if(t.dataset.act==="w"){S.w[t.dataset.k]=t.value/100;render();const el=document.getElementById(t.id);if(el)el.focus()}
+  else if(t.dataset.act==="k"){S.k=+t.value;render();document.getElementById("k").focus()}
+});
+document.addEventListener("change",e=>{if(e.target.dataset.act==="bsel"){S.sel=+e.target.value;render()}});
+const h=(location.hash||"").slice(1);if(TABS.some(x=>x[0]===h))S.tab=h;
+render();
+</script>
