@@ -1,0 +1,81 @@
+/* PULSE design tokens. Direction: Atlas (calm cartographic report), sans-serif headings.
+   Every colour is defined on bare :root (light). The two dark blocks only redefine colours and must stay identical:
+   one follows the OS setting, the other follows the explicit toggle. */
+:root {
+    --bg: #edf1f4;
+    --surface: #f9fafb;
+    --ink: #14212b;
+    --muted: #55646f;
+    --line: #cfd8de;
+    --accent: #1d4e7a;
+    --accent-ink: #ffffff;
+    --ok: #266b4c;
+    --ok-bg: #dcede5;
+    --warn: #8a5508;
+    --warn-bg: #f6ead3;
+    --crit: #a9352a;
+    --crit-bg: #f6dedb;
+    /* sequential ramp for choropleths, low to high */
+    --q0: #e3edf4;
+    --q1: #b7d0e3;
+    --q2: #7fa9cb;
+    --q3: #4a7fab;
+    --q4: #1d4e7a;
+    --land: #dfe7ec;
+    --sea: #f5f8fa;
+
+    --font-display: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
+    --font-body: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
+    --font-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --radius: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f1a22;
+        --surface: #14222c;
+        --ink: #e4ecf1;
+        --muted: #8fa1ad;
+        --line: #263744;
+        --accent: #7fb2dc;
+        --accent-ink: #0f1a22;
+        --ok: #6cc59a;
+        --ok-bg: #16322a;
+        --warn: #e0a64b;
+        --warn-bg: #35290f;
+        --crit: #ee8478;
+        --crit-bg: #3c1f1b;
+        --q0: #1b3446;
+        --q1: #24506e;
+        --q2: #3a769f;
+        --q3: #63a2cc;
+        --q4: #a9d3ee;
+        --land: #182833;
+        --sea: #0f1a22;
+        color-scheme: dark;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f1a22;
+    --surface: #14222c;
+    --ink: #e4ecf1;
+    --muted: #8fa1ad;
+    --line: #263744;
+    --accent: #7fb2dc;
+    --accent-ink: #0f1a22;
+    --ok: #6cc59a;
+    --ok-bg: #16322a;
+    --warn: #e0a64b;
+    --warn-bg: #35290f;
+    --crit: #ee8478;
+    --crit-bg: #3c1f1b;
+    --q0: #1b3446;
+    --q1: #24506e;
+    --q2: #3a769f;
+    --q3: #63a2cc;
+    --q4: #a9d3ee;
+    --land: #182833;
+    --sea: #0f1a22;
+    color-scheme: dark;
+}

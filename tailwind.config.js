@@ -12,8 +12,31 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                bg: 'var(--bg)',
+                surface: 'var(--surface)',
+                ink: 'var(--ink)',
+                muted: 'var(--muted)',
+                line: 'var(--line)',
+                accent: 'var(--accent)',
+                'accent-ink': 'var(--accent-ink)',
+                ok: 'var(--ok)',
+                'ok-bg': 'var(--ok-bg)',
+                warn: 'var(--warn)',
+                'warn-bg': 'var(--warn-bg)',
+                crit: 'var(--crit)',
+                'crit-bg': 'var(--crit-bg)',
+                land: 'var(--land)',
+                sea: 'var(--sea)',
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                display: 'var(--font-display)',
+                body: 'var(--font-body)',
+                data: 'var(--font-data)',
+                sans: ['var(--font-body)', ...defaultTheme.fontFamily.sans],
+            },
+            borderRadius: {
+                DEFAULT: 'var(--radius)',
             },
         },
     },

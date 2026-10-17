@@ -10,5 +10,7 @@ export default defineConfig({
     test: {
         environment: 'jsdom',
         include: ['resources/js/**/*.test.ts'],
+        // Node 25 ships its own localStorage that shadows jsdom's; turn it off so the DOM one is used.
+        execArgv: ['--no-experimental-webstorage'],
     },
 });
