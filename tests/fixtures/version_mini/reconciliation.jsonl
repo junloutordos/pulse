@@ -1,0 +1,12 @@
+{"scope":"Caraga","cycle":2025,"metric":"applicants","pulse_sum":288,"custodian_sum":288,"matches":true}
+{"scope":"Caraga","cycle":2025,"metric":"examinees","pulse_sum":265,"custodian_sum":265,"matches":true}
+{"scope":"Caraga","cycle":2026,"metric":"applicants","pulse_sum":255,"custodian_sum":255,"matches":true}
+{"scope":"Caraga","cycle":2026,"metric":"examinees","pulse_sum":244,"custodian_sum":244,"matches":true}
+{"scope":"Agusan del Norte","cycle":2025,"metric":"applicants","pulse_sum":172,"custodian_sum":172,"matches":true}
+{"scope":"Agusan del Norte","cycle":2025,"metric":"examinees","pulse_sum":161,"custodian_sum":161,"matches":true}
+{"scope":"Agusan del Norte","cycle":2026,"metric":"applicants","pulse_sum":164,"custodian_sum":164,"matches":true}
+{"scope":"Agusan del Norte","cycle":2026,"metric":"examinees","pulse_sum":158,"custodian_sum":158,"matches":true}
+{"scope":"Surigao del Sur","cycle":2025,"metric":"applicants","pulse_sum":116,"custodian_sum":116,"matches":true}
+{"scope":"Surigao del Sur","cycle":2025,"metric":"examinees","pulse_sum":104,"custodian_sum":104,"matches":true}
+{"scope":"Surigao del Sur","cycle":2026,"metric":"applicants","pulse_sum":91,"custodian_sum":91,"matches":true}
+{"scope":"Surigao del Sur","cycle":2026,"metric":"examinees","pulse_sum":86,"custodian_sum":86,"matches":true}

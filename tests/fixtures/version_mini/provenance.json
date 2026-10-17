@@ -1,0 +1,24 @@
+{
+  "source": "synthetic",
+  "cycle": 2026,
+  "prior_cycle": 2025,
+  "dataset_version": "2026.10.17-syn",
+  "formula_version": "1.0",
+  "refreshed_at": "2026-10-17T00:12:00+00:00",
+  "schema_version": 1,
+  "files": {
+    "indicators.parquet": "2af0d25cb32c3f1d89d0dfbe7771a25b3ed7a50d75eacd2646261f5ec6e60ce5",
+    "indicators.jsonl": "bc3be216a07d9a5a46cdff351c8d859b3697b0dfc338196148eba8c5d8b890ae",
+    "neighbors.parquet": "f32e444e7a5c6be941556ad19bff7e54158509b83e755b2daf194d998734cd0a",
+    "neighbors.jsonl": "49c471dd4f9ff7424405b9b8e10dd9dee971e7f32308b976527e39b7ffea0966",
+    "munis.parquet": "9fd93f3e3dd6fa35669eceaffc16a7ff10f9bb76b3665d29842143e276adc74b",
+    "munis.jsonl": "7f059534bc2d85339c66c1650240f19138f4a3e226d8d2792885eb2fd0fb4b6f",
+    "reconciliation.parquet": "8525dbbee6657a2e3de5e86e69889b2beb4c8dd1ed7a8378e80f59dd1cd517a3",
+    "reconciliation.jsonl": "e666d89bb0d5e9c18079c11e6917d3f455fc3f6010a544e934693ca4ea4a54ff",
+    "issues.parquet": "5560ae99b76caec0f9fa58d3d78511cfb8776a2600fa2d14f5423c3725ae184c",
+    "issues.jsonl": "86c215c8de67a23c7bae13734b24c11e56a296fc3f841f4754f7143419a9b790",
+    "scores.parquet": "38854fb658f30c9fcb6429774b4942945f47ebeffa63465f062a12e863a5cfec",
+    "scores.jsonl": "6ca2e1a5d3d964f39f3b44423ec4d2f93e9c277cecd047ee8d5d8976847b8d9f",
+    "boundaries.geojson": "91843f46580e82a12422d1fef94ee116a60affb0d8ad1e3c7ae4233094bc5640"
+  }
+}

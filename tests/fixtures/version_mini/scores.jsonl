@@ -1,0 +1,6 @@
+{"psgc":"9900100001","c_reach":0.0,"c_attendance":0.0,"c_decline":0.0,"score":0.0,"rank":3,"not_ranked_reason":null}
+{"psgc":"9900100002","c_reach":0.5,"c_attendance":0.5,"c_decline":0.5,"score":50.0,"rank":2,"not_ranked_reason":null}
+{"psgc":"9900100003","c_reach":null,"c_attendance":null,"c_decline":null,"score":null,"rank":null,"not_ranked_reason":"applicant count suppressed"}
+{"psgc":"9900200001","c_reach":1.0,"c_attendance":1.0,"c_decline":1.0,"score":100.0,"rank":1,"not_ranked_reason":null}
+{"psgc":"9900200002","c_reach":null,"c_attendance":null,"c_decline":null,"score":null,"rank":null,"not_ranked_reason":"missing reach"}
+{"psgc":"9900200003","c_reach":null,"c_attendance":null,"c_decline":null,"score":null,"rank":null,"not_ranked_reason":"no data for this cycle"}

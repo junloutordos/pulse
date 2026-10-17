@@ -30,7 +30,9 @@ def write_version(out_dir: Path, tables: dict[str, pd.DataFrame], boundaries: gp
     for name, df in tables.items():
         path = folder / f"{name}.parquet"
         df.to_parquet(path, index=False)
-        files.append(path)
+        jsonl = folder / f"{name}.jsonl"  # interchange copy for the Laravel importer (PHP cannot read Parquet)
+        jsonl.write_text(df.to_json(orient="records", lines=True))
+        files.extend([path, jsonl])
     geo = folder / "boundaries.geojson"
     boundaries.to_crs("EPSG:4326").to_file(geo, driver="GeoJSON")
     files.append(geo)
