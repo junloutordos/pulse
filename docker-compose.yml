@@ -32,6 +32,7 @@ services:
       context: .
       dockerfile: docker/pipeline/Dockerfile
     profiles: ["tools"]
+    working_dir: /work/pipeline
     volumes:
       - ./pipeline:/work/pipeline
       - ./data:/work/data
