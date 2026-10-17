@@ -23,7 +23,9 @@ Needs Docker, Git and Node 22 or newer on the host.
 ```sh
 git clone git@github.com:junloutordos/pulse.git && cd pulse
 cp .env.example .env
-docker compose up -d --build          # app on http://localhost:${APP_PORT:-8000}; installs PHP packages on first start
+docker compose build
+docker compose run --rm --no-deps app composer install   # PHP packages first: the frontend build needs them
+docker compose up -d                  # app on http://localhost:${APP_PORT:-8000}
 npm install && npm run build          # run on the host, not in the container
 docker compose --profile tools run --rm pipeline \
   python -m pulse_pipeline run --source synthetic --ref-dir /work/data/reference --out /work/data/versions

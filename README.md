@@ -17,7 +17,9 @@ See `docs/handover/README.md` for the full steps. In short:
 
 ```sh
 cp .env.example .env
-docker compose up -d --build          # app on http://localhost:8000 (set APP_PORT to change), mysql 8.4.11
+docker compose build
+docker compose run --rm --no-deps app composer install   # PHP packages first: the frontend build needs them
+docker compose up -d                  # app on http://localhost:8000 (set APP_PORT to change), mysql 8.4.11
 npm install && npm run build          # on the host, not in the container
 docker compose --profile tools run --rm pipeline python -m pulse_pipeline run --source synthetic --ref-dir /work/data/reference --out /work/data/versions
 docker compose exec app php artisan migrate --force
