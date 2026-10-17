@@ -136,3 +136,17 @@ test('completing an entry twice keeps the first completion date', function () {
 
     expect($entry->fresh()->completed_on->toDateString())->toBe('2026-10-01');
 });
+
+test('register entries from an inactive dataset version cannot be completed', function () {
+    $this->actingAs($this->planner)->post('/planner/decisions', [
+        'psgc' => RANKED_FIRST, 'status' => 'accepted', 'reason' => 'Matches local knowledge',
+        'action' => 'Information and application campaign',
+        'weights' => ['reach' => 1, 'attendance' => 1, 'decline' => 1],
+    ]);
+    $entry = ActionRegisterEntry::first();
+    app(DatasetImporter::class)->import(copyVersion('2026.10.20-syn'));
+
+    $this->actingAs($this->planner)->patch("/register/{$entry->id}")->assertNotFound();
+
+    expect($entry->fresh()->status)->toBe('planned');
+});

@@ -48,6 +48,9 @@ class BriefController extends Controller
 
     public function complete(ActionRegisterEntry $entry): RedirectResponse
     {
+        Gate::authorize('plan');
+        abort_unless($entry->dataset_version_id === DatasetVersion::activeOrFail()->id, 404);
+
         if ($entry->status !== 'completed') {
             $entry->update(['status' => 'completed', 'completed_on' => today()]);
         }

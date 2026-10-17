@@ -44,6 +44,8 @@ class PlannerController extends Controller
 
     public function decide(Request $request): RedirectResponse
     {
+        Gate::authorize('plan');
+
         $version = DatasetVersion::active() ?? abort(409, 'No active dataset.');
 
         $data = $request->validate([
