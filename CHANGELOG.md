@@ -11,3 +11,4 @@
 - Source protocol, versioned output writer with checksums, and the pipeline CLI.
 - Dataset import into MySQL (versioned, checksum-verified, idempotent) and the pulse:import command.
 - Roles (viewer/planner), shared dataset prop, synthetic banner.
+- TypeScript priority scoring with Python parity (shared fixtures) and Vitest.
