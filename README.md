@@ -13,16 +13,22 @@ Laravel 13 · Inertia.js · Vue 3 + TypeScript · Tailwind · MySQL **8.4.11** (
 
 ## Run
 
+See `docs/handover/README.md` for the full steps. In short:
+
 ```sh
 cp .env.example .env
-docker compose up -d --build        # app on http://localhost:8000, mysql 8.4.11
-docker compose exec app php artisan migrate
-docker compose exec app npm install && docker compose exec app npm run build
+docker compose up -d --build          # app on http://localhost:8000 (set APP_PORT to change), mysql 8.4.11
+npm install && npm run build          # on the host, not in the container
+docker compose --profile tools run --rm pipeline python -m pulse_pipeline run --source synthetic --ref-dir /work/data/reference --out /work/data/versions
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan db:seed --class=DemoSeeder --force
 ```
 
 ## Test
 
 ```sh
 docker compose exec app php vendor/bin/pest        # Laravel (runs against MySQL, database pulse_test)
-docker compose run --rm pipeline pytest            # pipeline (added in Task 2)
+docker compose --profile tools run --rm pipeline pytest   # pipeline
+npm test                                           # frontend logic and components
+npm run e2e                                        # scripted demo path (stack must be up)
 ```
