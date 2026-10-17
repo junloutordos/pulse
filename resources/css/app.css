@@ -177,3 +177,13 @@
 .rows-move {
     transition: transform var(--dur-3) var(--ease-out);
 }
+
+@media print {
+    header[class*='sticky'], nav[aria-label='Primary'], [aria-live='polite'][class*='fixed'], .no-print { display: none !important; }
+    body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+    .panel, .float { box-shadow: none !important; border: 1px solid #ccc; }
+    .page-enter { animation: none !important; }
+    .max-h-\[72vh\], .max-h-\[28rem\] { max-height: none !important; overflow: visible !important; }
+    .data-table th { position: static; }
+    a[href^='http']::after { content: ' (' attr(href) ')'; font-size: 9pt; color: #555; }
+}

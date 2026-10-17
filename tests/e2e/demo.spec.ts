@@ -1,12 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-
-async function login(page: Page, email: string) {
-    await page.goto('/login');
-    await page.getByLabel('Email').fill(email);
-    await page.getByLabel('Password').fill('password');
-    await page.getByRole('button', { name: /log in/i }).click();
-    await expect(page).toHaveURL(/dashboard/);
-}
+import { login } from './helpers';
 
 const nav = (page: Page, name: string) => page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: new RegExp(`${name}$`) });
 
@@ -39,7 +32,7 @@ test('source-to-decision demo path', async ({ page, request }) => {
 
     // 4. The pipeline scatter separates low applications from low attendance.
     await nav(page, 'Pipeline').click();
-    await expect(page.getByRole('img', { name: /Scatter of applications/ })).toBeVisible();
+    await expect(page.getByRole('group', { name: /Scatter of applications/ })).toBeVisible();
 
     // 5. Priority: weights change the order, and unsafe weights are refused.
     await nav(page, 'Priority list').click();

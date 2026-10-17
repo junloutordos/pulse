@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 // Needs the stack running: docker compose up -d, a synthetic version in data/versions, and `npm run build`.
 export default defineConfig({
     testDir: 'tests/e2e',
+    testIgnore: /visual\.spec\.ts/, // run separately: npm run visual
     globalSetup: './tests/e2e/global-setup.ts',
     timeout: 120_000,
     workers: 1,

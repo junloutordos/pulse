@@ -49,7 +49,8 @@ The command prints a generated password once. Share it through a secure channel.
 docker compose exec app php vendor/bin/pest                 # Laravel
 docker compose --profile tools run --rm pipeline pytest     # pipeline
 npm test                                                    # frontend logic and components
-PULSE_E2E_RESET=1 npm run e2e                               # scripted demo path; WIPES the app database, never run it on a live stack
+PULSE_E2E_RESET=1 npm run e2e                               # demo path, accessibility (axe), keyboard and motion checks; WIPES the app database, never run it on a live stack
+PULSE_E2E_RESET=1 npm run visual                            # screenshot comparison (light, dark, desktop, phone); add -- --update-snapshots after an intended visual change
 node scripts/check-contrast.mjs                             # colour contrast of the design tokens
 ```
 

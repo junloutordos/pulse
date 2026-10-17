@@ -2,6 +2,7 @@
 import DataNotices from '@/Components/DataNotices.vue';
 import EmptyState from '@/Components/EmptyState.vue';
 import PageHeader from '@/Components/PageHeader.vue';
+import Spark from '@/Components/Spark.vue';
 import Segmented from '@/Components/Segmented.vue';
 import { suggestedFocus } from '@/lib/focus';
 import { fixed, pct, signedPct } from '@/lib/format';
@@ -127,7 +128,7 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                             <thead>
                                 <tr>
                                     <th class="text-right">Rank</th><th>Municipality</th><th>Score</th>
-                                    <th class="text-right">Apps per 1,000</th><th class="text-right">Attendance</th><th class="whitespace-nowrap text-right">Δ prior</th>
+                                    <th class="text-right">Apps per 1,000</th><th class="text-right">Attendance</th><th class="whitespace-nowrap">Change vs prior</th>
                                     <th>Rank band</th><th>Suggested focus</th>
                                 </tr>
                             </thead>
@@ -155,7 +156,12 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                                     </td>
                                     <td class="num text-right">{{ fixed(byPsgc.get(s.psgc)!.rate_per_1000) }}</td>
                                     <td class="num text-right">{{ pct(byPsgc.get(s.psgc)!.attendance) }}</td>
-                                    <td class="num text-right">{{ signedPct(byPsgc.get(s.psgc)!.change) }}</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <Spark :from="byPsgc.get(s.psgc)!.prior_applicants" :to="byPsgc.get(s.psgc)!.applicants" :label="`${byPsgc.get(s.psgc)!.name} applicants`" />
+                                            <span class="num w-10 text-right text-[0.8125rem]">{{ signedPct(byPsgc.get(s.psgc)!.change) }}</span>
+                                        </div>
+                                    </td>
                                     <td class="whitespace-nowrap">
                                         <template v-if="bands.get(s.psgc)">
                                             <span class="pill" :class="bands.get(s.psgc)!.stable ? 'pill-ok' : 'pill-warn'">{{ bands.get(s.psgc)!.stable ? 'Stable' : 'Sensitive' }}</span>

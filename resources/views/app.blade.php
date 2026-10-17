@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <meta name="description" content="PULSE: geospatial decision support for NCE outreach planning at PSHS-CRC. Staff only.">
+        <meta name="robots" content="noindex, nofollow">
+
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <script>try{var t=localStorage.getItem('pulse-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>

@@ -46,8 +46,8 @@ const refreshed = computed(() => (dataset.value ? new Date(dataset.value.refresh
                 <dl v-if="dataset" class="mt-3 grid gap-3 text-sm">
                     <div><dt class="label">Source</dt><dd class="font-semibold">{{ dataset.source === 'synthetic' ? 'Synthetic, generated for demonstration' : 'Approved aggregates' }}</dd></div>
                     <div><dt class="label">Admission cycle</dt><dd class="num font-semibold">{{ dataset.cycle }}<span v-if="dataset.priorCycle" class="font-normal text-muted"> compared with {{ dataset.priorCycle }}</span></dd></div>
-                    <div><dt class="label">Version</dt><dd class="num break-all font-semibold">{{ dataset.version }}</dd></div>
-                    <div><dt class="label">Refreshed</dt><dd class="font-semibold">{{ refreshed }}</dd></div>
+                    <div><dt class="label">Version</dt><dd class="num break-all font-semibold" data-vr-mask>{{ dataset.version }}</dd></div>
+                    <div><dt class="label">Refreshed</dt><dd class="font-semibold" data-vr-mask>{{ refreshed }}</dd></div>
                 </dl>
                 <p v-else class="mt-3 text-sm text-muted">No dataset is active yet. Import one with <code>php artisan pulse:import</code>.</p>
                 <p class="mt-4 rounded bg-surface-2 p-3 text-[0.8125rem] text-muted">PULSE supports decisions. Staff validate every suggestion, and nothing here claims to explain why participation differs.</p>
