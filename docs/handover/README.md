@@ -33,7 +33,15 @@ docker compose exec app php artisan migrate --force
 docker compose exec app php artisan db:seed --class=DemoSeeder --force   # demo users and the newest dataset (never in production)
 ```
 
-Sign in at `/login` as `planner@pulse.test` or `viewer@pulse.test`, password `password`. Change or delete these accounts before any real use.
+Sign in at `/login` as `planner@pulse.test` or `viewer@pulse.test`, password `password`. Delete these demo accounts before any real use.
+
+There is no public sign-up. Create staff accounts on the server:
+
+```sh
+docker compose exec app php artisan pulse:user someone@pshs.example "Full Name" --role=planner   # or --role=viewer
+```
+
+The command prints a generated password once. Share it through a secure channel.
 
 ## Tests
 
@@ -41,7 +49,7 @@ Sign in at `/login` as `planner@pulse.test` or `viewer@pulse.test`, password `pa
 docker compose exec app php vendor/bin/pest                 # Laravel
 docker compose --profile tools run --rm pipeline pytest     # pipeline
 npm test                                                    # frontend logic and components
-npm run e2e                                                 # scripted demo path (needs the stack up)
+PULSE_E2E_RESET=1 npm run e2e                               # scripted demo path; WIPES the app database, never run it on a live stack
 node scripts/check-contrast.mjs                             # colour contrast of the design tokens
 ```
 

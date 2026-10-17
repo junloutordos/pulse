@@ -12,6 +12,20 @@ const CASES = cases as unknown as Case[];
 const byName = (name: string) => CASES.find((c) => c.name === name)!;
 
 describe('priorityScores', () => {
+    it('explains missing components in plain language', () => {
+        const rows: IndicatorRow[] = [
+            { psgc: 'A', status: 'ok', rate_per_1000: 10, attendance: 0.9, change: 0.1 },
+            { psgc: 'B', status: 'ok', rate_per_1000: 20, attendance: 0.8, change: 0 },
+            { psgc: 'C', status: 'ok', rate_per_1000: null, attendance: 0.7, change: 0.2 },
+            { psgc: 'D', status: 'ok', rate_per_1000: 30, attendance: null, change: 0.2 },
+            { psgc: 'E', status: 'ok', rate_per_1000: 40, attendance: 0.6, change: null },
+        ];
+        const out = Object.fromEntries(priorityScores(rows, { reach: 1, attendance: 1, decline: 1 }).map((r) => [r.psgc, r.not_ranked_reason]));
+        expect(out.C).toBe('no Grade 6 population (rate not computed)');
+        expect(out.D).toBe('no exam attendance');
+        expect(out.E).toBe('no prior-cycle comparison');
+    });
+
     for (const c of CASES) {
         it(`matches shared fixture: ${c.name}`, () => {
             const out = priorityScores(c.rows, c.weights);

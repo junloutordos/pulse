@@ -4,11 +4,12 @@ namespace App\Console\Commands;
 
 use App\Services\Import\ChecksumMismatch;
 use App\Services\Import\DatasetImporter;
+use App\Services\Import\VersionConflict;
 use Illuminate\Console\Command;
 
 class PulseImport extends Command
 {
-    protected $signature = 'pulse:import {versionDir : Path to a pipeline version folder} {--activate : Make this the active dataset version}';
+    protected $signature = 'pulse:import {versionDir : Path to a pipeline version folder} {--activate : Make this the active dataset version} {--force : Replace an existing version that has different content}';
 
     protected $description = 'Import a versioned pipeline dataset into MySQL';
 
@@ -22,8 +23,8 @@ class PulseImport extends Command
         }
 
         try {
-            $version = $importer->import($dir, (bool) $this->option('activate'));
-        } catch (ChecksumMismatch $e) {
+            $version = $importer->import($dir, (bool) $this->option('activate'), (bool) $this->option('force'));
+        } catch (ChecksumMismatch|VersionConflict $e) {
             $this->error($e->getMessage());
 
             return self::FAILURE;

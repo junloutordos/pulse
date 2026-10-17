@@ -13,7 +13,7 @@ Do this once per admission cycle, with the campus data steward.
      --counts /work/data/inputs/counts.csv --custodian /work/data/inputs/custodian.csv
    ```
    For the GATES Lakehouse use `--source lakehouse --connection <path> --table <table> [--custodian-table <table>]`.
-3. **Import without activating, then check**
+3. **Import without activating, then check.** Version folders are named by date and time (for example `2026.10.17-0905-real`), so two runs never collide. Re-importing a name that exists with different content is refused unless you add `--force`.
    ```sh
    docker compose exec app php artisan pulse:import data/versions/<version>
    ```

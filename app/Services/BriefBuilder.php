@@ -59,6 +59,7 @@ class BriefBuilder
                 'Exam attendance' => $ind->attendance === null ? null : round($ind->attendance * 100).'%',
                 'Change vs prior cycle' => $ind->change === null ? null : sprintf('%+d%%', round($ind->change * 100)),
             ],
+            'weightsBasis' => $decision ? 'decision' : 'balanced',
             'rank' => $ranks[$psgc] ?? null,
             'rankedCount' => count($ranks),
             'score' => $score,

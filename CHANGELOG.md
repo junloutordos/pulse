@@ -16,3 +16,4 @@
 - Visual direction (Atlas, sans headings), design tokens with contrast and theme tests, app layout, start page.
 - Demo seeder and a Playwright script for the whole source-to-decision demo path.
 - Optional AI-assisted brief summary (off by default, aggregate-only payload, template fallback).
+- Review fixes: self-registration removed (staff accounts via `pulse:user`), start page removed, same-day version names and a refusal to overwrite a version with different content, plain-language notices when a dataset has no Grade 6 population or only one cycle, saved weights re-checked against each dataset, region exam attendance no longer counts withheld values as zero, brief states which weights its rank uses, keyboard municipality picker on the map, planner account deletion keeps decisions, generated files untracked, e2e reset guarded.

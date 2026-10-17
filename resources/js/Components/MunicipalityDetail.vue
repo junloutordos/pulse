@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Funnel from '@/Components/Funnel.vue';
 import StatusPill from '@/Components/StatusPill.vue';
-import { count, fixed, pct, regionTotals, signedPct } from '@/lib/format';
+import { count, fixed, pct, regionShare, signedPct } from '@/lib/format';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -22,15 +22,14 @@ export interface DetailRow {
 
 const props = defineProps<{ row: DetailRow; all: DetailRow[]; rank: number | null; ranked: number; cycle: number; priorCycle: number | null }>();
 
-const region = computed(() => regionTotals(props.all));
+const examinedRegion = computed(() => regionShare(props.all, 'examinees'));
 const hidden = computed(() => props.row.status === 'suppressed' || props.row.status === 'missing');
 const stages = computed(() => {
     const a = props.row.applicants;
     const share = (v: number | null) => (a && v !== null ? v / a : null);
-    const r = region.value;
     return [
         { label: 'Applied', value: a, share: a ? 1 : null, regionShare: 1 },
-        { label: 'Examined', value: props.row.examinees, share: share(props.row.examinees), regionShare: r.applicants ? r.examinees / r.applicants : null },
+        { label: 'Examined', value: props.row.examinees, share: share(props.row.examinees), regionShare: examinedRegion.value },
         // Small qualifier cells are suppressed, so a region share would be built from partial data. Leave it out.
         { label: 'Qualified', value: props.row.qualifiers, share: share(props.row.qualifiers), regionShare: null },
     ];

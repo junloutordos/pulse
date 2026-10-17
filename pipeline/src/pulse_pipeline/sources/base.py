@@ -22,7 +22,7 @@ def make_provenance(source: Literal["synthetic", "real"], raw: pd.DataFrame, now
         source=source,
         cycle=cycles[-1],
         prior_cycle=cycles[-2] if len(cycles) > 1 else None,
-        dataset_version=f"{now:%Y.%m.%d}-{'syn' if source == 'synthetic' else 'real'}",
+        dataset_version=f"{now:%Y.%m.%d-%H%M}-{'syn' if source == 'synthetic' else 'real'}",
         formula_version=FORMULA_VERSION,
         refreshed_at=now.isoformat(timespec="seconds"),
         schema_version=SCHEMA_VERSION,

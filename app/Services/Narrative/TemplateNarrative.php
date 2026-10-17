@@ -18,8 +18,9 @@ class TemplateNarrative
         $obs = $d['observations'];
         $show = fn (string $key) => $obs[$key] ?? null ?: 'not available';
         $score = number_format($d['score'], 0);
+        $basis = ($d['weightsBasis'] ?? 'balanced') === 'decision' ? 'the weights recorded with the planner decision' : 'Balanced weights';
 
-        return "{$name} ranks #{$d['rank']} of {$d['rankedCount']} at the current weights (score {$score}). "
+        return "{$name} ranks #{$d['rank']} of {$d['rankedCount']} at {$basis} (score {$score}). "
             .'It shows '.$show('Applications per 1,000').' applications per 1,000 Grade 6 learners, '
             .$show('Exam attendance').' exam attendance and '.$show('Change vs prior cycle').' in applications compared with the prior cycle. '
             ."The suggested focus is {$action}. Staff should validate local circumstances before acting.";

@@ -65,7 +65,7 @@ test('source-to-decision demo path', async ({ page, request }) => {
     await nav(page, 'Brief').click();
     const brief = page.frameLocator('iframe[title="Evidence brief preview"]');
     await expect(brief.getByText('SYNTHETIC DATA')).toBeVisible();
-    await expect(brief.getByText(/Dataset \d{4}\.\d{2}\.\d{2}-syn/)).toBeVisible();
+    await expect(brief.getByText(/Dataset \d{4}\.\d{2}\.\d{2}(-\d{4})?-syn/)).toBeVisible();
     await expect(page.getByRole('cell', { name: 'Planned', exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Mark completed' }).click();
     await expect(page.getByText(/Completed \d{4}-\d{2}-\d{2}/)).toBeVisible();

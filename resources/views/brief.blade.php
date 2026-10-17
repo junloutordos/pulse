@@ -37,7 +37,7 @@
         <td style="text-align:right">
             @if ($rank !== null)
                 <div class="status">Priority #{{ $rank }} of {{ $rankedCount }}</div>
-                <div class="muted">Score {{ number_format($score, 0) }} of 100</div>
+                <div class="muted">Score {{ number_format($score, 0) }} of 100, at {{ $weightsBasis === 'decision' ? 'the weights recorded with the planner decision' : 'Balanced weights' }}</div>
             @else
                 <div class="status">Not ranked</div>
             @endif

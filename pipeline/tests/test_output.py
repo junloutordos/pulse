@@ -37,3 +37,14 @@ def test_jsonl_keeps_nulls_and_integers(tmp_path):
     folder = write_version(tmp_path, {"t": df}, gdf, _prov())
     rows = [json.loads(line) for line in (folder / "t.jsonl").read_text().splitlines()]
     assert rows == [{"psgc": "A", "n": 7, "x": 0.5}, {"psgc": "B", "n": None, "x": None}]
+
+
+def test_version_name_includes_the_time_so_same_day_runs_do_not_collide():
+    from datetime import datetime, timezone
+
+    from pulse_pipeline.sources.base import make_provenance
+
+    raw = pd.DataFrame({"cycle": [2025, 2026]})
+    now = datetime(2026, 10, 17, 9, 5, tzinfo=timezone.utc)
+    assert make_provenance("synthetic", raw, now).dataset_version == "2026.10.17-0905-syn"
+    assert make_provenance("real", raw, now).dataset_version == "2026.10.17-0905-real"

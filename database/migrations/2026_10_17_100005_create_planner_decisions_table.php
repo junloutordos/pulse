@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('planner_decisions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('dataset_version_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('psgc', 10);
             $table->foreign('psgc')->references('psgc')->on('municipalities');
             $table->enum('status', ['accepted', 'deferred']);

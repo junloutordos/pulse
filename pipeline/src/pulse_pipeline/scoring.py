@@ -26,6 +26,13 @@ _STATUS_REASON = {
 }
 
 
+_MISSING_REASON = {
+    "reach": "no Grade 6 population (rate not computed)",
+    "attendance": "no exam attendance",
+    "decline": "no prior-cycle comparison",
+}
+
+
 def _low_is_high_priority(values: pd.Series) -> pd.Series:
     n = len(values)
     if n < 2:
@@ -66,7 +73,7 @@ def priority_scores(ind: pd.DataFrame, w: Weights) -> pd.DataFrame:
         if not basic[i]:
             return _STATUS_REASON[ind.at[i, "status"]]
         missing = next(k for k, col, _ in active if pd.isna(ind.at[i, col]))
-        return f"missing {missing}"
+        return _MISSING_REASON[missing]
 
     res["not_ranked_reason"] = [reason(i) for i in ind.index]
     return res.reset_index(drop=True)

@@ -36,6 +36,12 @@ const STATUS_REASON: Record<Exclude<Status, 'ok'>, string> = {
 };
 
 // A low value on each indicator means higher priority. Keep in step with pipeline/src/pulse_pipeline/scoring.py.
+const MISSING_REASON = {
+    reach: 'no Grade 6 population (rate not computed)',
+    attendance: 'no exam attendance',
+    decline: 'no prior-cycle comparison',
+} as const;
+
 const COMPONENTS = [
     { key: 'reach', column: 'rate_per_1000', out: 'c_reach' },
     { key: 'attendance', column: 'attendance', out: 'c_attendance' },
@@ -89,7 +95,7 @@ export function priorityScores(rows: IndicatorRow[], w: Weights): ScoredRow[] {
     rows.forEach((r, i) => {
         if (eligible[i]) return;
         result[i].not_ranked_reason = basic[i]
-            ? `missing ${active.find((c) => r[c.column] === null)!.key}`
+            ? MISSING_REASON[active.find((c) => r[c.column] === null)!.key]
             : STATUS_REASON[r.status as Exclude<Status, 'ok'>];
     });
     return result;

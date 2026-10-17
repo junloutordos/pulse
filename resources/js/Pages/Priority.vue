@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DataNotices from '@/Components/DataNotices.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { fixed, pct, signedPct } from '@/lib/format';
 import { suggestedFocus } from '@/lib/focus';
@@ -9,7 +10,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps<{ rows: MunicipalityRow[]; canPlan: boolean }>();
-const { weights, message, scored, update, applyPreset } = useWeights(computed(() => props.rows));
+const { weights, message, scored, available, update, applyPreset } = useWeights(computed(() => props.rows));
 
 const byPsgc = computed(() => new Map(props.rows.map((r) => [r.psgc, r])));
 const ranked = computed(() => scored.value.filter((s) => s.rank !== null).sort((a, b) => a.rank! - b.rank!));
@@ -33,7 +34,7 @@ const SLIDERS = [
     { key: 'attendance', label: 'Low attendance' },
     { key: 'decline', label: 'Decline vs prior cycle' },
 ] as const;
-const active = (key: 'reach' | 'attendance' | 'decline') => scored.value.some((s) => s[`c_${key}`] !== null);
+const active = (key: 'reach' | 'attendance' | 'decline') => available.value[key];
 </script>
 
 <template>
@@ -45,6 +46,7 @@ const active = (key: 'reach' | 'attendance' | 'decline') => scored.value.some((s
                 <h1 class="mt-1 text-3xl font-semibold">Explainable outreach priority</h1>
                 <p class="mt-2 text-muted">Weights are planning preferences, not predictions. Move them and watch which places keep their rank.</p>
             </div>
+            <DataNotices :rows="rows" />
 
             <div class="grid items-start gap-6 xl:grid-cols-[18rem_minmax(0,1fr)]">
                 <aside class="panel grid gap-4 p-4">

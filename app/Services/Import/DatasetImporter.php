@@ -13,11 +13,12 @@ class DatasetImporter
 {
     private const CHUNK = 500;
 
-    public function import(string $versionDir, bool $activate = true): DatasetVersion
+    public function import(string $versionDir, bool $activate = true, bool $force = false): DatasetVersion
     {
         $versionDir = rtrim($versionDir, '/');
         $prov = json_decode(file_get_contents("$versionDir/provenance.json"), true, 512, JSON_THROW_ON_ERROR);
         $this->verifyChecksums($versionDir, $prov['files']);
+        $this->refuseToReplace($prov, $force);
 
         $munis = $this->rows("$versionDir/munis.jsonl");
         $indicators = $this->rows("$versionDir/indicators.jsonl");
@@ -92,6 +93,23 @@ class DatasetImporter
 
             return $version->fresh();
         });
+    }
+
+    /** MySQL JSON columns do not keep key order, so compare checksum maps by key. */
+    private function sorted(array $files): array
+    {
+        ksort($files);
+
+        return $files;
+    }
+
+    /** A version name that already exists is only re-imported when its content is identical, unless forced. */
+    private function refuseToReplace(array $prov, bool $force): void
+    {
+        $existing = DatasetVersion::where('version', $prov['dataset_version'])->first();
+        if ($existing && ! $force && $this->sorted($existing->checksums) !== $this->sorted($prov['files'])) {
+            throw new VersionConflict("Version {$prov['dataset_version']} is already imported with different content. Build a new version, or pass --force to replace it.");
+        }
     }
 
     /** @param array<string, string> $files */

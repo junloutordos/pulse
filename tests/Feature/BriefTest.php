@@ -150,3 +150,15 @@ test('register entries from an inactive dataset version cannot be completed', fu
 
     expect($entry->fresh()->status)->toBe('planned');
 });
+
+test('brief says which weights its rank uses', function () {
+    $this->actingAs($this->viewer)->get('/brief/'.RANKED_FIRST)->assertSee('at Balanced weights');
+
+    $this->actingAs($this->planner)->post('/planner/decisions', [
+        'psgc' => RANKED_FIRST, 'status' => 'accepted', 'reason' => 'Matches local knowledge',
+        'action' => 'Information and application campaign',
+        'weights' => ['reach' => 1, 'attendance' => 0, 'decline' => 0],
+    ]);
+
+    $this->actingAs($this->viewer)->get('/brief/'.RANKED_FIRST)->assertSee('at the weights recorded with the planner decision')->assertDontSee('at Balanced weights');
+});

@@ -120,3 +120,14 @@ test('planner page exposes rows, decisions, register and nearby municipalities',
             ->where('canPlan', false)
     );
 });
+
+test('a planner who recorded decisions can delete their account and the decision stays', function () {
+    $planner = User::factory()->planner()->create();
+    $this->actingAs($planner)->post('/planner/decisions', decision());
+
+    $this->actingAs($planner)->delete('/profile', ['password' => 'password'])->assertRedirect('/');
+
+    expect(User::find($planner->id))->toBeNull()
+        ->and(PlannerDecision::count())->toBe(1)
+        ->and(PlannerDecision::first()->user_id)->toBeNull();
+});

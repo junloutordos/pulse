@@ -32,5 +32,5 @@ docker compose exec app php artisan db:seed --class=DemoSeeder --force
 docker compose exec app php vendor/bin/pest        # Laravel (runs against MySQL, database pulse_test)
 docker compose --profile tools run --rm pipeline pytest   # pipeline
 npm test                                           # frontend logic and components
-npm run e2e                                        # scripted demo path (stack must be up)
+PULSE_E2E_RESET=1 npm run e2e                      # scripted demo path; wipes the app database
 ```

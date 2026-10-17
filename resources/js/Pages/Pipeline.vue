@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DataNotices from '@/Components/DataNotices.vue';
 import MunicipalityDetail from '@/Components/MunicipalityDetail.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { fixed, pct } from '@/lib/format';
@@ -27,8 +28,8 @@ const points = computed(() => props.rows.filter((r) => (r.status === 'ok' || r.s
 
 // Chart geometry: one scale per axis, ticks placed with the same scale.
 const W = 600, H = 400, L = 52, R = 16, T = 16, B = 48;
-const xMax = computed(() => Math.max(10, Math.ceil(Math.max(...points.value.map((p) => p.rate_per_1000!)) / 10) * 10));
-const yMin = computed(() => Math.max(0, Math.floor(Math.min(...points.value.map((p) => p.attendance!)) * 10) / 10));
+const xMax = computed(() => (points.value.length ? Math.max(10, Math.ceil(Math.max(...points.value.map((p) => p.rate_per_1000!)) / 10) * 10) : 10));
+const yMin = computed(() => (points.value.length ? Math.max(0, Math.floor(Math.min(...points.value.map((p) => p.attendance!)) * 10) / 10) : 0));
 const x = (v: number) => L + (v / xMax.value) * (W - L - R);
 const y = (v: number) => T + (1 - (v - yMin.value) / (1 - yMin.value)) * (H - T - B);
 const xTicks = computed(() => Array.from({ length: xMax.value / 10 + 1 }, (_, i) => i * 10));
@@ -52,11 +53,13 @@ const my = computed(() => props.regionMedians.attendance);
                     The same low numbers can need different action. Few applications call for information campaigns. Low attendance calls for reminders and an access review.
                 </p>
             </div>
+            <DataNotices :rows="rows" />
 
             <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
                 <section class="panel p-4" aria-labelledby="scatter">
                     <h2 id="scatter" class="sr-only">Applications per 1,000 against exam attendance</h2>
-                    <svg :viewBox="`0 0 ${W} ${H}`" class="h-auto w-full" role="img" aria-label="Scatter of applications per 1,000 Grade 6 learners against exam attendance">
+                    <p v-if="!points.length" class="p-6 text-sm text-muted">Nothing to chart: no municipality has both applications per 1,000 and exam attendance.</p>
+                    <svg v-else :viewBox="`0 0 ${W} ${H}`" class="h-auto w-full" role="img" aria-label="Scatter of applications per 1,000 Grade 6 learners against exam attendance">
                         <rect v-if="mx !== null && my !== null" :x="L" :y="y(my)" :width="x(mx) - L" :height="H - B - y(my)" class="fill-crit-bg" />
                         <g class="stroke-line">
                             <line v-for="t in xTicks" :key="`gx${t}`" :x1="x(t)" :x2="x(t)" :y1="T" :y2="H - B" />

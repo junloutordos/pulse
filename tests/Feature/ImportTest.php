@@ -5,6 +5,7 @@ use App\Models\Municipality;
 use App\Models\MunicipalityIndicator;
 use App\Models\MunicipalityNeighbor;
 use App\Services\Import\ChecksumMismatch;
+use App\Services\Import\VersionConflict;
 use App\Services\Import\DatasetImporter;
 use Illuminate\Support\Facades\Storage;
 
@@ -106,4 +107,47 @@ test('score components and not-ranked reasons are imported', function () {
         ->and($unranked)->not->toBeNull()
         ->and($unranked->c_reach)->toBeNull()
         ->and($unranked->not_ranked_reason)->toBe($scores[$unranked->psgc]['not_ranked_reason']);
+});
+
+function changedContentSameVersion(): string
+{
+    $dir = copyVersion();
+    $rows = file("$dir/indicators.jsonl", FILE_IGNORE_NEW_LINES);
+    $first = json_decode($rows[0], true);
+    $first['applicants'] = 9999;
+    $rows[0] = json_encode($first);
+    file_put_contents("$dir/indicators.jsonl", implode("\n", $rows)."\n");
+    $prov = json_decode(file_get_contents("$dir/provenance.json"), true);
+    $prov['files']['indicators.jsonl'] = hash_file('sha256', "$dir/indicators.jsonl");
+    file_put_contents("$dir/provenance.json", json_encode($prov));
+
+    return $dir;
+}
+
+test('re-importing a version name with different content is refused', function () {
+    importer()->import(fixtureDir());
+    $before = MunicipalityIndicator::orderBy('id')->first()->applicants;
+
+    expect(fn () => importer()->import(changedContentSameVersion()))->toThrow(VersionConflict::class);
+
+    expect(MunicipalityIndicator::orderBy('id')->first()->applicants)->toBe($before);
+});
+
+test('force replaces a version that has different content', function () {
+    importer()->import(fixtureDir());
+
+    importer()->import(changedContentSameVersion(), force: true);
+
+    expect(MunicipalityIndicator::orderBy('id')->first()->applicants)->toBe(9999);
+});
+
+test('pulse import command refuses a conflicting version unless forced', function () {
+    importer()->import(fixtureDir());
+    $dir = changedContentSameVersion();
+
+    $this->artisan('pulse:import', ['versionDir' => $dir])->assertFailed();
+    expect(MunicipalityIndicator::orderBy('id')->first()->applicants)->not->toBe(9999);
+
+    $this->artisan('pulse:import', ['versionDir' => $dir, '--force' => true])->assertSuccessful();
+    expect(MunicipalityIndicator::orderBy('id')->first()->applicants)->toBe(9999);
 });

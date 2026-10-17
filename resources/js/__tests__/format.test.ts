@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fixed, pct, regionTotals, signedPct, STATUS_LABEL } from '../lib/format';
+import { fixed, pct, regionShare, signedPct, STATUS_LABEL } from '../lib/format';
 
 describe('format', () => {
     it('shows an em dash for missing values instead of zero', () => {
@@ -20,13 +20,19 @@ describe('format', () => {
         expect(Object.keys(STATUS_LABEL)).toEqual(['ok', 'low', 'suppressed', 'missing']);
     });
 
-    it('region totals include ok and low rows and never suppressed or missing', () => {
+    it('region share uses only rows where both numerator and applicants are known', () => {
         const rows = [
-            { status: 'ok', applicants: 100, examinees: 80, qualifiers: 10 },
-            { status: 'low', applicants: 10, examinees: 8, qualifiers: null },
-            { status: 'suppressed', applicants: null, examinees: null, qualifiers: null },
-            { status: 'missing', applicants: null, examinees: null, qualifiers: null },
+            { status: 'ok', applicants: 100, examinees: 80 },
+            { status: 'ok', applicants: 50, examinees: null },
+            { status: 'low', applicants: 10, examinees: 8 },
+            { status: 'suppressed', applicants: null, examinees: null },
+            { status: 'missing', applicants: null, examinees: null },
         ] as const;
-        expect(regionTotals([...rows])).toEqual({ applicants: 110, examinees: 88, qualifiers: 10 });
+        expect(regionShare([...rows], 'examinees')).toBeCloseTo(88 / 110, 12);
+    });
+
+    it('region share is null when nothing can be computed', () => {
+        expect(regionShare([{ status: 'suppressed', applicants: null, examinees: null }], 'examinees')).toBeNull();
+        expect(regionShare([], 'examinees')).toBeNull();
     });
 });

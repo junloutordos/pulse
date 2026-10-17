@@ -1,4 +1,4 @@
-import { computed, reactive, Ref, ref } from 'vue';
+import { computed, reactive, Ref, ref, watch } from 'vue';
 import { PRESETS } from './rankBand';
 import { AllZeroWeightsError, IndicatorRow, priorityScores, ScoredRow, Weights } from './scoring';
 
@@ -42,6 +42,21 @@ export function useWeights(rows: Ref<IndicatorRow[]>) {
         }
     };
 
+    const available = computed(() => {
+        const has = (column: 'rate_per_1000' | 'attendance' | 'change') => rows.value.some((r) => r.status === 'ok' && r[column] !== null);
+        return { reach: has('rate_per_1000'), attendance: has('attendance'), decline: has('change') };
+    });
+
+    // Saved weights may not suit a newly loaded dataset. Fall back to Balanced and say why.
+    function recheck(): void {
+        if (usable(state) || !usable(PRESETS.Balanced)) return;
+        Object.assign(state, PRESETS.Balanced);
+        remember();
+        message.value = 'Your saved weights put no weight on anything this dataset can score, so the Balanced preset was restored.';
+    }
+    recheck();
+    watch(rows, recheck, { flush: 'sync' });
+
     function commit(next: Weights, blocked: string): void {
         if (!usable(next)) {
             message.value = blocked;
@@ -71,5 +86,5 @@ export function useWeights(rows: Ref<IndicatorRow[]>) {
         }
     });
 
-    return { weights: state, message, scored, update, applyPreset };
+    return { weights: state, message, scored, available, update, applyPreset };
 }

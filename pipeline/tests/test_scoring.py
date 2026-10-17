@@ -53,3 +53,11 @@ def test_zero_weight_on_only_available_component_raises():
 def test_negative_weight_raises():
     with pytest.raises(ValueError):
         priority_scores(_ind(CASES[0]["rows"]), Weights(1, -1, 1))
+
+
+def test_component_reasons_are_plain_language():
+    rows = [("A", "ok", 10, 0.9, 0.1), ("B", "ok", 20, 0.8, 0.0), ("C", "ok", None, 0.7, 0.2), ("D", "ok", 30, None, 0.2), ("E", "ok", 40, 0.6, None)]
+    out = priority_scores(_ind(rows), Weights(1, 1, 1)).set_index("psgc")
+    assert out.loc["C", "not_ranked_reason"] == "no Grade 6 population (rate not computed)"
+    assert out.loc["D", "not_ranked_reason"] == "no exam attendance"
+    assert out.loc["E", "not_ranked_reason"] == "no prior-cycle comparison"

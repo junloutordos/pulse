@@ -74,4 +74,31 @@ describe('useWeights', () => {
         w.update('reach', 0.7);
         expect(JSON.parse(sessionStorage.getItem('pulse-weights')!).reach).toBe(0.7);
     });
+
+    it('falls back to balanced weights, with a message, when saved weights cannot score this dataset', () => {
+        sessionStorage.setItem('pulse-weights', JSON.stringify({ reach: 0, attendance: 0, decline: 0.5 }));
+        resetWeights();
+        Object.assign(useWeights(ref(rows())).weights, { reach: 0, attendance: 0, decline: 0.5 });
+        const oneCycle = ref(rows({ change: null }));
+        const w = useWeights(oneCycle);
+        expect({ ...w.weights }).toEqual(PRESETS.Balanced);
+        expect(w.message.value).toMatch(/saved weights/i);
+        expect(w.scored.value.every((r) => r.rank !== null)).toBe(true);
+    });
+
+    it('reports which components the dataset can score, independent of the weights', () => {
+        const w = useWeights(ref(rows({ rate_per_1000: null })));
+        expect(w.available.value).toEqual({ reach: false, attendance: true, decline: true });
+    });
+
+    it('re-checks the weights when the rows change', async () => {
+        const data = ref(rows());
+        const w = useWeights(data);
+        w.update('reach', 0);
+        w.update('attendance', 0);
+        data.value = rows({ change: null });
+        await Promise.resolve();
+        expect({ ...w.weights }).toEqual(PRESETS.Balanced);
+        expect(w.message.value).not.toBe('');
+    });
 });

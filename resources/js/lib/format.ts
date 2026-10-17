@@ -21,21 +21,26 @@ export const signedPct = (v: number | null | undefined): string => {
 
 export const count = (v: number | null | undefined): string => (v == null ? DASH : v.toLocaleString('en-US'));
 
-interface Countable {
+interface Shareable {
     status: string;
     applicants: number | null;
-    examinees: number | null;
-    qualifiers: number | null;
+    examinees?: number | null;
+    qualifiers?: number | null;
 }
 
-/** Region totals use only rows that are shown (ok and low); suppressed and missing rows are never counted as zero. */
-export function regionTotals(rows: Countable[]): { applicants: number; examinees: number; qualifiers: number } {
-    const totals = { applicants: 0, examinees: 0, qualifiers: 0 };
+/**
+ * Region-wide share of applicants for a stage. Only rows where both the stage count and the applicant count are known
+ * contribute, so a withheld value is never added as zero.
+ */
+export function regionShare(rows: Shareable[], key: 'examinees' | 'qualifiers'): number | null {
+    let numerator = 0;
+    let applicants = 0;
     for (const r of rows) {
         if (r.status !== 'ok' && r.status !== 'low') continue;
-        totals.applicants += r.applicants ?? 0;
-        totals.examinees += r.examinees ?? 0;
-        totals.qualifiers += r.qualifiers ?? 0;
+        const value = r[key];
+        if (value == null || r.applicants == null) continue;
+        numerator += value;
+        applicants += r.applicants;
     }
-    return totals;
+    return applicants > 0 ? numerator / applicants : null;
 }

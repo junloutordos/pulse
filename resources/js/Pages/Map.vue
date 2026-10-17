@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DataNotices from '@/Components/DataNotices.vue';
 import MunicipalityDetail from '@/Components/MunicipalityDetail.vue';
 import MunicipalityMap from '@/Components/MunicipalityMap.vue';
 import Segmented from '@/Components/Segmented.vue';
@@ -78,6 +79,7 @@ const legend = computed(() =>
 );
 
 const row = computed(() => props.rows.find((r) => r.psgc === selected.value) ?? first);
+const options = computed(() => [...props.rows].sort((a, b) => a.name.localeCompare(b.name) || a.province.localeCompare(b.province)));
 </script>
 
 <template>
@@ -90,8 +92,17 @@ const row = computed(() => props.rows.find((r) => r.psgc === selected.value) ?? 
                     <h1 class="mt-1 text-3xl font-semibold">Participation across Caraga, {{ dataset.cycle }} cycle</h1>
                     <p class="mt-2 text-muted">Select a municipality for its counts, rates and data status.</p>
                 </div>
-                <Segmented v-model="metric" label="Map metric" :options="metrics.map((m) => ({ key: m.key, label: m.label }))" />
+                <div class="flex flex-wrap items-end gap-3">
+                    <label class="grid gap-1 text-sm" for="map-municipality">
+                        <span class="label">Municipality</span>
+                        <select id="map-municipality" v-model="selected" class="min-w-[14rem]">
+                            <option v-for="r in options" :key="r.psgc" :value="r.psgc">{{ r.name }} ({{ r.province }})</option>
+                        </select>
+                    </label>
+                    <Segmented v-model="metric" label="Map metric" :options="metrics.map((m) => ({ key: m.key, label: m.label }))" />
+                </div>
             </div>
+            <DataNotices :rows="rows" />
 
             <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
                 <div class="grid gap-3">
@@ -100,7 +111,7 @@ const row = computed(() => props.rows.find((r) => r.psgc === selected.value) ?? 
                         <li v-for="l in legend" :key="l.label" class="flex items-center gap-1.5">
                             <i class="inline-block h-2.5 w-5 border border-line" :style="{ background: l.color }" />{{ l.label }}
                         </li>
-                        <li class="flex items-center gap-1.5"><i class="inline-block h-2.5 w-5 border border-line bg-surface" />Not shown (suppressed or missing)</li>
+                        <li class="flex items-center gap-1.5"><i class="inline-block h-2.5 w-5 border border-line bg-surface" />No value for this metric (suppressed, missing or not computed)</li>
                     </ul>
                     <p v-if="isCluster" class="text-xs text-muted">Local Moran's I on applications per 1,000 with the four nearest neighbours. Only clusters with p below 0.05 are coloured.</p>
                     <p v-if="metric === 'score'" class="text-xs text-muted">Priority score uses the weights set on the Priority list.</p>

@@ -25,7 +25,7 @@ function briefData(): array
         'weights' => ['reach' => 33, 'attendance' => 33, 'decline' => 34],
         'action' => 'Exam reminder and access review', 'notRankedReason' => null,
         'decision' => ['status' => 'accepted', 'reason' => 'Free text a planner typed, possibly with a name'],
-        'office' => 'PSHS-CRC Outreach', 'psgc' => '9900200001',
+        'office' => 'PSHS-CRC Outreach', 'psgc' => '9900200001', 'weightsBasis' => 'balanced',
     ];
 }
 
