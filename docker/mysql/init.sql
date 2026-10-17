@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS pulse_test;
+GRANT ALL PRIVILEGES ON pulse_test.* TO 'pulse'@'%';
+FLUSH PRIVILEGES;
