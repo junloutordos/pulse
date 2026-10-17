@@ -33,6 +33,11 @@ class UserFactory extends Factory
         ];
     }
 
+    public function planner(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => 'planner']);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

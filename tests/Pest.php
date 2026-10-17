@@ -48,3 +48,26 @@ function something()
 {
     // ..
 }
+
+/*
+|--------------------------------------------------------------------------
+| Shared test helpers
+|--------------------------------------------------------------------------
+*/
+
+function fixtureDir(): string
+{
+    return base_path('tests/fixtures/version_mini');
+}
+
+function copyVersion(?string $newVersion = null, ?string $source = null): string
+{
+    $dest = sys_get_temp_dir().'/pulse-'.uniqid();
+    \Illuminate\Support\Facades\File::copyDirectory(fixtureDir(), $dest);
+    $prov = json_decode(file_get_contents("$dest/provenance.json"), true);
+    $prov['dataset_version'] = $newVersion ?? $prov['dataset_version'];
+    $prov['source'] = $source ?? $prov['source'];
+    file_put_contents("$dest/provenance.json", json_encode($prov));
+
+    return $dest;
+}

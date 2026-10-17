@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\DatasetVersion;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -34,6 +35,13 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'dataset' => fn () => ($v = DatasetVersion::active()) ? [
+                'version' => $v->version,
+                'source' => $v->source,
+                'cycle' => $v->cycle,
+                'priorCycle' => $v->prior_cycle,
+                'refreshedAt' => $v->refreshed_at->toIso8601String(),
+            ] : null,
         ];
     }
 }

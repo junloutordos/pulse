@@ -6,28 +6,9 @@ use App\Models\MunicipalityIndicator;
 use App\Models\MunicipalityNeighbor;
 use App\Services\Import\ChecksumMismatch;
 use App\Services\Import\DatasetImporter;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(fn () => Storage::fake('local'));
-
-function fixtureDir(): string
-{
-    return base_path('tests/fixtures/version_mini');
-}
-
-function copyVersion(?string $newVersion = null): string
-{
-    $dest = sys_get_temp_dir().'/pulse-'.uniqid();
-    File::copyDirectory(fixtureDir(), $dest);
-    if ($newVersion) {
-        $prov = json_decode(file_get_contents("$dest/provenance.json"), true);
-        $prov['dataset_version'] = $newVersion;
-        file_put_contents("$dest/provenance.json", json_encode($prov));
-    }
-
-    return $dest;
-}
 
 function importer(): DatasetImporter
 {

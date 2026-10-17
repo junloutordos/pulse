@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SyntheticBanner from '@/Components/SyntheticBanner.vue';
 import { ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -12,6 +13,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
+        <SyntheticBanner />
         <div class="min-h-screen bg-gray-100">
             <nav
                 class="border-b border-gray-100 bg-white"
