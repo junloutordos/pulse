@@ -91,3 +91,19 @@ test('pulse import command leaves version inactive without the flag', function (
 
     expect(DatasetVersion::first()->is_active)->toBeFalse();
 });
+
+test('score components and not-ranked reasons are imported', function () {
+    importer()->import(fixtureDir());
+
+    $scores = collect(file(fixtureDir().'/scores.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))
+        ->map(fn ($l) => json_decode($l, true))->keyBy('psgc');
+    $ranked = MunicipalityIndicator::whereNotNull('c_reach')->first();
+    $unranked = MunicipalityIndicator::whereNotNull('not_ranked_reason')->first();
+
+    expect($ranked)->not->toBeNull()
+        ->and($ranked->c_reach)->toBe((float) $scores[$ranked->psgc]['c_reach'])
+        ->and($ranked->c_attendance)->toBe((float) $scores[$ranked->psgc]['c_attendance'])
+        ->and($unranked)->not->toBeNull()
+        ->and($unranked->c_reach)->toBeNull()
+        ->and($unranked->not_ranked_reason)->toBe($scores[$unranked->psgc]['not_ranked_reason']);
+});

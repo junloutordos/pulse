@@ -17,6 +17,9 @@ class MunicipalityIndicator extends Model
             'rate_per_1000' => 'float',
             'attendance' => 'float',
             'change' => 'float',
+            'c_reach' => 'float',
+            'c_attendance' => 'float',
+            'c_decline' => 'float',
         ];
     }
 

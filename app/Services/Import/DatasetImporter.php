@@ -22,10 +22,11 @@ class DatasetImporter
         $munis = $this->rows("$versionDir/munis.jsonl");
         $indicators = $this->rows("$versionDir/indicators.jsonl");
         $neighbors = $this->rows("$versionDir/neighbors.jsonl");
+        $scores = array_column($this->rows("$versionDir/scores.jsonl"), null, 'psgc');
         $boundariesPath = "versions/{$prov['dataset_version']}/boundaries.geojson";
         Storage::disk('local')->put($boundariesPath, file_get_contents("$versionDir/boundaries.geojson"));
 
-        return DB::transaction(function () use ($prov, $munis, $indicators, $neighbors, $versionDir, $boundariesPath, $activate) {
+        return DB::transaction(function () use ($prov, $munis, $indicators, $neighbors, $scores, $versionDir, $boundariesPath, $activate) {
             Municipality::upsert(
                 array_map(fn ($m) => [
                     'psgc' => $m['psgc'], 'name' => $m['name'], 'province_psgc' => $m['province_psgc'],
@@ -66,6 +67,10 @@ class DatasetImporter
                     'change' => $r['change'],
                     'status' => $r['status'],
                     'lisa_cluster' => $r['lisa_cluster'],
+                    'c_reach' => $scores[$r['psgc']]['c_reach'] ?? null,
+                    'c_attendance' => $scores[$r['psgc']]['c_attendance'] ?? null,
+                    'c_decline' => $scores[$r['psgc']]['c_decline'] ?? null,
+                    'not_ranked_reason' => $scores[$r['psgc']]['not_ranked_reason'] ?? null,
                 ], $chunk));
             }
 

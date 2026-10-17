@@ -23,6 +23,10 @@ return new class extends Migration
             $table->double('change')->nullable();
             $table->enum('status', ['ok', 'low', 'suppressed', 'missing']);
             $table->string('lisa_cluster', 2)->nullable();
+            $table->double('c_reach')->nullable();
+            $table->double('c_attendance')->nullable();
+            $table->double('c_decline')->nullable();
+            $table->string('not_ranked_reason')->nullable();
             $table->unique(['dataset_version_id', 'psgc']);
         });
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BriefController;
 use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -21,6 +22,10 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/planner', [PlannerController::class, 'index'])->name('planner');
+    Route::get('/brief', [BriefController::class, 'index'])->name('brief');
+    Route::get('/brief/{psgc}', [BriefController::class, 'show'])->name('brief.show');
+    Route::get('/brief/{psgc}/pdf', [BriefController::class, 'pdf'])->name('brief.pdf');
+    Route::patch('/register/{entry}', [BriefController::class, 'complete'])->middleware('can:plan')->name('register.complete');
     Route::post('/planner/decisions', [PlannerController::class, 'decide'])->middleware('can:plan')->name('planner.decide');
 });
 
