@@ -23,8 +23,7 @@ Development only: Pest and Pest plugins (MIT), PHPUnit (BSD-3-Clause), smalot/pd
 | maplibre-gl | 6.14.0 | BSD-3-Clause |
 | tailwindcss | 3.4.19 | MIT |
 | vite, laravel-vite-plugin | 8.3.4, 3.2.0 | MIT |
-| @fontsource-variable/bricolage-grotesque (Bricolage Grotesque) | 5.3.0 | OFL-1.1 |
-| @fontsource-variable/hanken-grotesk (Hanken Grotesk) | 5.3.0 | OFL-1.1 |
+| @fontsource-variable/hanken-grotesk (Hanken Grotesk, all text) | 5.3.0 | OFL-1.1 |
 | lucide-vue-next (icons) | 1.0.0 | ISC |
 
 Development only: vitest 4.1.12, jsdom 29.1.1, @vue/test-utils 2.5.1 (MIT); @playwright/test 1.64.1 (Apache-2.0).

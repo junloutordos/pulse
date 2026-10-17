@@ -5,20 +5,20 @@
 <title>PULSE evidence brief: {{ $municipality->name }}</title>
 <style>
     @page { margin: 22mm 18mm; }
-    body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 10.5pt; color: #14232b; line-height: 1.45; margin: 0; }
+    body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 10.5pt; color: #0f1b3a; line-height: 1.45; margin: 0; }
     .page { position: relative; z-index: 1; max-width: 740px; margin: 0 auto; padding: 24px; }
     .watermark { position: fixed; top: 38%; left: 0; right: 0; text-align: center; font-size: 46pt; font-weight: bold; color: #f1dcae; z-index: 0; transform: rotate(-24deg); }
     h1 { font-size: 20pt; margin: 2px 0 0; }
-    h2 { font-size: 11pt; margin: 18px 0 6px; text-transform: uppercase; letter-spacing: .06em; color: #566a70; }
+    h2 { font-size: 11pt; margin: 18px 0 6px; text-transform: uppercase; letter-spacing: .06em; color: #546078; }
     table { border-collapse: collapse; width: 100%; }
-    td, th { padding: 4px 6px; border-bottom: 1px solid #d5dfdc; text-align: left; vertical-align: top; }
-    th { color: #566a70; font-weight: normal; width: 55%; }
+    td, th { padding: 4px 6px; border-bottom: 1px solid #d1d9e8; text-align: left; vertical-align: top; }
+    th { color: #546078; font-weight: normal; width: 55%; }
     td.num { text-align: right; }
     .head td { border: 0; padding: 0; }
-    .head { border-bottom: 2px solid #14232b; padding-bottom: 8px; margin-bottom: 8px; }
-    .muted { color: #566a70; font-size: 9pt; }
+    .head { border-bottom: 2px solid #0f1b3a; padding-bottom: 8px; margin-bottom: 8px; }
+    .muted { color: #546078; font-size: 9pt; }
     .status { font-weight: bold; }
-    .prov { margin-top: 20px; padding-top: 8px; border-top: 1px solid #d5dfdc; font-size: 8.5pt; color: #566a70; }
+    .prov { margin-top: 20px; padding-top: 8px; border-top: 1px solid #d1d9e8; font-size: 8.5pt; color: #546078; }
     ul { margin: 4px 0 0 16px; padding: 0; }
     .col { width: 48%; vertical-align: top; }
 </style>

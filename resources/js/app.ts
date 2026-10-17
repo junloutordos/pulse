@@ -1,4 +1,3 @@
-import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/hanken-grotesk';
 import '../css/app.css';
 
