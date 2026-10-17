@@ -1,0 +1,74 @@
+psgc,name,province_psgc,province,lat,lon
+9900100001,Buenavista,99001,Agusan del Norte,8.977,125.409
+9900100002,Butuan City,99001,Agusan del Norte,8.949,125.543
+9900100003,Cabadbaran City,99001,Agusan del Norte,9.123,125.535
+9900100004,Carmen,99001,Agusan del Norte,8.99,125.29
+9900100005,Jabonga,99001,Agusan del Norte,9.343,125.516
+9900100006,Kitcharao,99001,Agusan del Norte,9.457,125.574
+9900100007,Las Nieves,99001,Agusan del Norte,8.736,125.601
+9900100008,Magallanes,99001,Agusan del Norte,9.021,125.518
+9900100009,Nasipit,99001,Agusan del Norte,8.968,125.34
+9900100010,Remedios T. Romualdez,99001,Agusan del Norte,9.055,125.585
+9900100011,Santiago,99001,Agusan del Norte,9.264,125.56
+9900100012,Tubay,99001,Agusan del Norte,9.165,125.523
+9900200001,Bayugan City,99002,Agusan del Sur,8.713,125.749
+9900200002,Bunawan,99002,Agusan del Sur,8.178,125.994
+9900200003,Esperanza,99002,Agusan del Sur,8.676,125.646
+9900200004,La Paz,99002,Agusan del Sur,8.287,125.806
+9900200005,Loreto,99002,Agusan del Sur,8.186,125.854
+9900200006,Prosperidad,99002,Agusan del Sur,8.606,125.915
+9900200007,Rosario,99002,Agusan del Sur,8.379,125.999
+9900200008,San Francisco,99002,Agusan del Sur,8.506,125.977
+9900200009,San Luis,99002,Agusan del Sur,8.494,125.735
+9900200010,Santa Josefa,99002,Agusan del Sur,7.994,126.031
+9900200011,Sibagat,99002,Agusan del Sur,8.822,125.692
+9900200012,Talacogon,99002,Agusan del Sur,8.456,125.787
+9900200013,Trento,99002,Agusan del Sur,8.046,126.063
+9900200014,Veruela,99002,Agusan del Sur,8.073,125.956
+9900300001,Alegria,99003,Surigao del Norte,9.5,125.6
+9900300002,Bacuag,99003,Surigao del Norte,9.608,125.64
+9900300003,Burgos,99003,Surigao del Norte,10.009,126.074
+9900300004,Claver,99003,Surigao del Norte,9.573,125.733
+9900300005,Dapa,99003,Surigao del Norte,9.759,126.051
+9900300006,Del Carmen,99003,Surigao del Norte,9.868,125.97
+9900300007,General Luna,99003,Surigao del Norte,9.784,126.157
+9900300008,Gigaquit,99003,Surigao del Norte,9.594,125.698
+9900300009,Mainit,99003,Surigao del Norte,9.537,125.523
+9900300010,Malimono,99003,Surigao del Norte,9.618,125.402
+9900300011,Pilar,99003,Surigao del Norte,9.864,126.1
+9900300012,Placer,99003,Surigao del Norte,9.657,125.601
+9900300013,San Benito,99003,Surigao del Norte,9.958,126.007
+9900300014,San Francisco,99003,Surigao del Norte,9.728,125.418
+9900300015,San Isidro,99003,Surigao del Norte,9.937,126.088
+9900300016,Santa Monica,99003,Surigao del Norte,10.02,126.037
+9900300017,Sison,99003,Surigao del Norte,9.659,125.529
+9900300018,Socorro,99003,Surigao del Norte,9.621,125.967
+9900300019,Surigao City,99003,Surigao del Norte,9.784,125.489
+9900300020,Tagana-an,99003,Surigao del Norte,9.699,125.583
+9900300021,Tubod,99003,Surigao del Norte,9.553,125.57
+9900400001,Barobo,99004,Surigao del Sur,8.53,126.12
+9900400002,Bayabas,99004,Surigao del Sur,8.968,126.255
+9900400003,Bislig City,99004,Surigao del Sur,8.212,126.318
+9900400004,Cagwait,99004,Surigao del Sur,8.918,126.302
+9900400005,Cantilan,99004,Surigao del Sur,9.335,125.977
+9900400006,Carmen,99004,Surigao del Sur,9.305,125.995
+9900400007,Carrascal,99004,Surigao del Sur,9.369,125.95
+9900400008,Cortes,99004,Surigao del Sur,9.273,126.19
+9900400009,Hinatuan,99004,Surigao del Sur,8.373,126.336
+9900400010,Lanuza,99004,Surigao del Sur,9.232,126.059
+9900400011,Lianga,99004,Surigao del Sur,8.633,126.093
+9900400012,Lingig,99004,Surigao del Sur,8.038,126.413
+9900400013,Madrid,99004,Surigao del Sur,9.262,125.965
+9900400014,Marihatag,99004,Surigao del Sur,8.8,126.299
+9900400015,San Agustin,99004,Surigao del Sur,8.72,126.19
+9900400016,San Miguel,99004,Surigao del Sur,8.93,126.0
+9900400017,Tagbina,99004,Surigao del Sur,8.45,126.16
+9900400018,Tago,99004,Surigao del Sur,9.02,126.232
+9900400019,Tandag City,99004,Surigao del Sur,9.078,126.198
+9900500001,Basilisa,99005,Dinagat Islands,10.065,125.601
+9900500002,Cagdianao,99005,Dinagat Islands,9.917,125.672
+9900500003,Dinagat,99005,Dinagat Islands,10.127,125.606
+9900500004,Libjo,99005,Dinagat Islands,10.198,125.533
+9900500005,Loreto,99005,Dinagat Islands,10.362,125.581
+9900500006,San Jose,99005,Dinagat Islands,10.008,125.573
+9900500007,Tubajon,99005,Dinagat Islands,10.324,125.556

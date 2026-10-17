@@ -10,3 +10,13 @@ export function binOf(value: number | null, breaks: number[]): number | null {
     if (value === null) return null;
     return breaks.filter((b) => value > b).length;
 }
+
+/** Readable ranges for each bin, e.g. ['≤ 3', '3–5', '5–7', '7–9', '> 9']. */
+export function legendLabels(breaks: number[], format: (v: number) => string): string[] {
+    if (breaks.length === 0) return [];
+    return [
+        `≤ ${format(breaks[0])}`,
+        ...breaks.slice(1).map((b, i) => `${format(breaks[i])}–${format(b)}`),
+        `> ${format(breaks[breaks.length - 1])}`,
+    ];
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { binOf, quantileBreaks } from '../lib/breaks';
+import { binOf, legendLabels, quantileBreaks } from '../lib/breaks';
 
 describe('quantileBreaks', () => {
     it('returns bins minus one thresholds from the sorted values', () => {
@@ -32,5 +32,15 @@ describe('binOf', () => {
 
     it('returns null for null so unfilled municipalities stay unfilled', () => {
         expect(binOf(null, breaks)).toBeNull();
+    });
+});
+
+describe('legendLabels', () => {
+    it('describes each bin from the thresholds', () => {
+        expect(legendLabels([3, 5, 7, 9], (v) => v.toFixed(0))).toEqual(['≤ 3', '3–5', '5–7', '7–9', '> 9']);
+    });
+
+    it('returns nothing when there are no thresholds', () => {
+        expect(legendLabels([], (v) => String(v))).toEqual([]);
     });
 });
