@@ -165,6 +165,9 @@
     .data-table tbody tr:hover td {
         background: color-mix(in srgb, var(--surface-2) 55%, transparent);
     }
+    .data-table tbody tr.is-selected td {
+        background: var(--accent-soft);
+    }
     .data-table tbody tr:last-child td {
         box-shadow: none;
     }

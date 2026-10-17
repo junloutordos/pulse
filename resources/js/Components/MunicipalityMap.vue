@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { mixHex } from '@/lib/color';
+import { prefersReducedMotion } from '@/lib/motion';
 import { useThemeColors } from '@/lib/themeColors';
 import { PageProps } from '@/types';
 import { usePage } from '@inertiajs/vue3';
@@ -45,6 +46,8 @@ let fitted = false;
 let observer: ResizeObserver | null = null;
 let hoveredId: string | null = null;
 let raf = 0;
+let pulseRaf = 0;
+let latById: Record<string, number> = {};
 let painted: Record<string, string> = {};
 const labels: maplibregl.Marker[] = [];
 
@@ -94,36 +97,62 @@ function paintState(): void {
     }
 }
 
-/** Colours ease from what is on screen to what is wanted, so switching metric reads as one change. */
-function paintFills(animate = true): void {
+/**
+ * Colours ease from what is on screen to what is wanted, so switching metric reads as one change.
+ * With `reveal`, the first paint sweeps in from north to south, once, when the map first appears.
+ */
+function paintFills(animate = true, reveal = false): void {
     if (!map || !ready) return;
     cancelAnimationFrame(raf);
     const target = Object.fromEntries(ids.map((id) => [id, props.fills[id] ?? null]));
     const from = painted;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const start = performance.now();
+    const reduce = prefersReducedMotion();
+    const sweep = reveal && !reduce ? 700 : 0;
     const duration = animate && !reduce ? 380 : 0;
+    const lats = Object.values(latById);
+    const north = Math.max(...lats);
+    const range = Math.max(0.0001, north - Math.min(...lats));
+    const start = performance.now();
+    const settled = Object.fromEntries(Object.entries(target).filter(([, v]) => v !== null) as [string, string][]);
     const step = (now: number) => {
-        const k = duration ? Math.min(1, (now - start) / duration) : 1;
-        const eased = 1 - (1 - k) ** 3;
+        const elapsed = now - start;
         const next: Record<string, string> = {};
         for (const id of ids) {
             const to = target[id];
-            if (to === null) setFill(id, null);
-            else {
-                next[id] = from[id] ? mixHex(from[id], to, eased) : to;
-                setFill(id, next[id]);
+            if (to === null) {
+                setFill(id, null);
+                continue;
             }
+            const delay = sweep ? ((north - latById[id]) / range) * sweep : 0;
+            const k = duration ? Math.min(1, Math.max(0, (elapsed - delay) / duration)) : 1;
+            const eased = 1 - (1 - k) ** 3;
+            const base = reveal ? colors.value.surface : (from[id] ?? to);
+            next[id] = mixHex(base, to, eased);
+            setFill(id, next[id]);
         }
-        painted = k < 1 ? next : Object.fromEntries(Object.entries(target).filter(([, v]) => v !== null) as [string, string][]);
-        if (k < 1) raf = requestAnimationFrame(step);
+        const done = elapsed >= sweep + duration;
+        painted = done ? settled : next;
+        if (!done) raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
 }
 
+/** A ring that grows and fades around the municipality that was just selected. */
+function pulse(id: string): void {
+    if (!map || !ready || prefersReducedMotion()) return;
+    cancelAnimationFrame(pulseRaf);
+    const start = performance.now();
+    const step = (now: number) => {
+        const k = Math.min(1, (now - start) / 650);
+        map!.setFeatureState({ source: 'munis', id }, { pulse: k < 1 ? k : 0 });
+        if (k < 1) pulseRaf = requestAnimationFrame(step);
+    };
+    pulseRaf = requestAnimationFrame(step);
+}
+
 function applyShape(): void {
     if (!map || !ready) return;
-    for (const layer of ['muni-fill', 'muni-hatch', 'muni-line', 'muni-highlight', 'muni-selected', 'muni-hover']) {
+    for (const layer of ['muni-fill', 'muni-hatch', 'muni-line', 'muni-highlight', 'muni-selected', 'muni-hover', 'muni-pulse']) {
         map.setFilter(layer, ['==', ['get', 'shape'], props.shape]);
     }
     map.setLayoutProperty('province-line', 'visibility', props.shape === 'boundary' ? 'visible' : 'none');
@@ -164,6 +193,7 @@ function restyle(): void {
     map.setPaintProperty('muni-selected', 'line-color', c.ink);
     map.setPaintProperty('muni-highlight', 'line-color', c.accent);
     map.setPaintProperty('muni-hover', 'line-color', c.ink);
+    map.setPaintProperty('muni-pulse', 'line-color', c.accent);
     map.setPaintProperty('province-line', 'line-color', c.muted);
     if (map.hasImage('hatch')) map.removeImage('hatch');
     map.addImage('hatch', hatchImage());
@@ -181,6 +211,17 @@ onMounted(async () => {
     }
     if (disposed || !container.value || !geo) return;
     ids = featuresOf('tile').map((f) => String(f.properties?.psgc));
+    latById = Object.fromEntries(
+        featuresOf('tile').map((f) => {
+            const b = new maplibregl.LngLatBounds();
+            const walk = (v: unknown): void => {
+                if (Array.isArray(v) && typeof v[0] === 'number') b.extend(v as [number, number]);
+                else if (Array.isArray(v)) v.forEach(walk);
+            };
+            walk((f.geometry as GeoJSON.Polygon).coordinates);
+            return [String(f.properties?.psgc), b.getCenter().lat];
+        }),
+    );
 
     map = new maplibregl.Map({
         container: container.value,
@@ -206,10 +247,11 @@ onMounted(async () => {
         m.addLayer({ id: 'province-line', type: 'line', source: 'munis', filter: ['==', ['get', 'shape'], 'province'], layout: { visibility: props.shape === 'boundary' ? 'visible' : 'none' }, paint: { 'line-color': colors.value.muted, 'line-width': 1.4, 'line-opacity': 0.7 } });
         m.addLayer({ id: 'muni-hover', type: 'line', source: 'munis', filter: shapeIs, paint: { 'line-color': colors.value.ink, 'line-width': flag('hover', 2) } });
         m.addLayer({ id: 'muni-highlight', type: 'line', source: 'munis', filter: shapeIs, paint: { 'line-color': colors.value.accent, 'line-width': flag('highlight', 3) } });
+        m.addLayer({ id: 'muni-pulse', type: 'line', source: 'munis', filter: shapeIs, paint: { 'line-color': colors.value.accent, 'line-width': ['*', ['coalesce', ['feature-state', 'pulse'], 0], 16] as maplibregl.ExpressionSpecification, 'line-opacity': ['-', 1, ['coalesce', ['feature-state', 'pulse'], 0]] as maplibregl.ExpressionSpecification } });
         m.addLayer({ id: 'muni-selected', type: 'line', source: 'munis', filter: shapeIs, paint: { 'line-color': colors.value.ink, 'line-width': flag('selected', 3.5) } });
         ready = true;
         fit();
-        paintFills(false);
+        paintFills(true, true);
         paintState();
         syncLabels();
     });
@@ -249,6 +291,7 @@ watch(() => props.fills, () => paintFills(true), { deep: true });
 watch(() => [props.selected, props.highlight], paintState, { deep: true });
 watch(() => props.selected, (id) => {
     if (!map || !ready || !id || !geo) return;
+    pulse(id);
     const f = featuresOf(props.shape).find((x) => x.properties?.psgc === id);
     if (!f) return;
     const b = new maplibregl.LngLatBounds();
@@ -266,6 +309,7 @@ watch(colors, restyle);
 onBeforeUnmount(() => {
     disposed = true;
     cancelAnimationFrame(raf);
+    cancelAnimationFrame(pulseRaf);
     observer?.disconnect();
     labels.splice(0).forEach((m) => m.remove());
     map?.remove();

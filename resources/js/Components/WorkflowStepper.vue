@@ -14,6 +14,7 @@ const STEPS = [
 const page = usePage();
 const list = ref<HTMLOListElement>();
 const indicator = ref<{ left: number; width: number } | null>(null);
+const animated = ref(false); // the first placement must not slide in from the left
 let observer: ResizeObserver | null = null;
 
 /** The pill is one element that slides to the active step, so moving between steps reads as one movement. */
@@ -24,6 +25,7 @@ function place() {
 
 onMounted(() => {
     place();
+    requestAnimationFrame(() => requestAnimationFrame(() => (animated.value = true)));
     observer = new ResizeObserver(place);
     if (list.value) observer.observe(list.value);
 });
@@ -37,7 +39,8 @@ watch(() => page.url, () => nextTick(place));
             <li
                 v-if="indicator"
                 aria-hidden="true"
-                class="pointer-events-none absolute top-2.5 h-8 rounded-full bg-surface shadow-sm transition-[left,width] duration-[var(--dur-3)] ease-[var(--ease-out)]"
+                class="pointer-events-none absolute top-2.5 h-8 rounded-full bg-surface shadow-sm"
+                :class="animated ? 'transition-[left,width] duration-[var(--dur-3)] ease-[var(--ease-out)]' : ''"
                 :style="{ left: `${indicator.left}px`, width: `${indicator.width}px` }"
             />
             <template v-for="(s, i) in STEPS" :key="s.route">

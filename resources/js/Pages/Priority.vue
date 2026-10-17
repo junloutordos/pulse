@@ -5,6 +5,7 @@ import Segmented from '@/Components/Segmented.vue';
 import { suggestedFocus } from '@/lib/focus';
 import { fixed, pct, signedPct } from '@/lib/format';
 import { PRESETS, rankBand } from '@/lib/rankBand';
+import { select, selected } from '@/lib/selection';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
 import { biggestMover, rankDeltas, Ranks } from '@/lib/rankDeltas';
@@ -119,7 +120,7 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                                 </tr>
                             </thead>
                             <TransitionGroup tag="tbody" name="rows">
-                                <tr v-for="s in ranked" :key="s.psgc">
+                                <tr v-for="s in ranked" :key="s.psgc" :class="{ 'is-selected': s.psgc === selected }" @click="select(s.psgc)">
                                     <td class="text-right">
                                         <span class="num font-display text-xl font-bold">{{ s.rank }}</span>
                                         <span v-if="deltas[s.psgc]" class="num ml-1 inline-flex items-center text-[0.75rem] font-semibold" :class="deltas[s.psgc] > 0 ? 'text-accent' : 'text-muted'" aria-hidden="true">

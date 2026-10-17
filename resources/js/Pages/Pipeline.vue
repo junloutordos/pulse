@@ -3,11 +3,12 @@ import DataNotices from '@/Components/DataNotices.vue';
 import MunicipalityDetail from '@/Components/MunicipalityDetail.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import { fixed, pct } from '@/lib/format';
+import { initialSelection, select } from '@/lib/selection';
 import { useWeights } from '@/lib/useWeights';
 import { PageProps } from '@/types';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     rows: MunicipalityRow[];
@@ -20,8 +21,10 @@ const ranks = computed(() => new Map(scored.value.map((s) => [s.psgc, s.rank])))
 const rankedCount = computed(() => scored.value.filter((s) => s.rank !== null).length);
 
 const wanted = new URLSearchParams(window.location.search).get('psgc');
-const first = props.rows.find((r) => r.psgc === wanted) ?? props.rows.find((r) => r.status === 'ok') ?? props.rows[0];
-const selected = ref(first.psgc);
+const firstOk = props.rows.find((r) => r.status === 'ok')?.psgc ?? props.rows[0].psgc;
+const selected = ref(initialSelection(wanted, props.rows.map((r) => r.psgc), firstOk));
+const first = props.rows.find((r) => r.psgc === selected.value) ?? props.rows[0];
+watch(selected, (v) => select(v), { immediate: true });
 const row = computed(() => props.rows.find((r) => r.psgc === selected.value) ?? first);
 
 const points = computed(() => props.rows.filter((r) => (r.status === 'ok' || r.status === 'low') && r.rate_per_1000 !== null && r.attendance !== null));

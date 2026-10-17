@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import PageHeader from '@/Components/PageHeader.vue';
 import SelectField from '@/Components/SelectField.vue';
+import { initialSelection, select } from '@/lib/selection';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, router } from '@inertiajs/vue3';
 import { Download, ExternalLink } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 interface Entry { id: number; psgc: string; name: string; action: string; office: string; status: string; planned_on: string; completed_on: string | null }
 const props = defineProps<{ rows: MunicipalityRow[]; register: Entry[]; canPlan: boolean }>();
@@ -13,7 +14,8 @@ const props = defineProps<{ rows: MunicipalityRow[]; register: Entry[]; canPlan:
 const { scored } = useWeights(computed(() => props.rows));
 const wanted = new URLSearchParams(window.location.search).get('psgc');
 const top = computed(() => scored.value.find((s) => s.rank === 1)?.psgc ?? props.rows[0].psgc);
-const selected = ref(props.rows.some((r) => r.psgc === wanted) ? wanted! : top.value);
+const selected = ref(initialSelection(wanted, props.rows.map((r) => r.psgc), top.value));
+watch(selected, (v) => select(v), { immediate: true });
 const options = computed(() => [...props.rows].sort((a, b) => a.name.localeCompare(b.name) || a.province.localeCompare(b.province)));
 
 function complete(id: number) {

@@ -8,6 +8,7 @@ import SelectField from '@/Components/SelectField.vue';
 import Segmented from '@/Components/Segmented.vue';
 import { binOf, legendLabels, quantileBreaks } from '@/lib/breaks';
 import { fixed, pct, signedPct } from '@/lib/format';
+import { initialSelection, select } from '@/lib/selection';
 import { useThemeColors } from '@/lib/themeColors';
 import { useWeights } from '@/lib/useWeights';
 import { PageProps } from '@/types';
@@ -37,8 +38,10 @@ const wide = typeof window.matchMedia === 'function' && window.matchMedia('(min-
 const padding = wide ? { top: 32, bottom: 32, left: 380, right: 420 } : { top: 24, bottom: 24, left: 24, right: 24 };
 const metric = ref<string>('rate');
 const wanted = new URLSearchParams(window.location.search).get('psgc');
-const first = props.rows.find((r) => r.psgc === wanted) ?? props.rows.find((r) => rank.value.get(r.psgc)?.rank === 1) ?? props.rows[0];
-const selected = ref<string>(first.psgc);
+const topRanked = props.rows.find((r) => rank.value.get(r.psgc)?.rank === 1)?.psgc ?? props.rows[0].psgc;
+const selected = ref<string>(initialSelection(wanted, props.rows.map((r) => r.psgc), topRanked));
+const first = props.rows.find((r) => r.psgc === selected.value) ?? props.rows[0];
+watch(selected, (v) => select(v), { immediate: true });
 
 const SHAPE_KEY = 'pulse-map-shape';
 const readShape = (): 'tile' | 'boundary' => {
