@@ -7,3 +7,4 @@
 - Pipeline package skeleton, reference loader and seeded synthetic generator (5 planted data problems).
 - PSGC matching (exact, alias, province-aware), suppression rules and reconciliation.
 - Indicators (rate per 1,000, attendance, change) and explainable priority score with shared fixtures.
+- Neighbours, groupable municipalities and local Moran's I clusters (two-sided, seeded).
