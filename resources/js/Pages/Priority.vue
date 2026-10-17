@@ -22,6 +22,12 @@ const weightSum = computed(() => {
 const bands = computed(() => new Map(ranked.value.map((s) => [s.psgc, rankBand(props.rows, PRESETS, s.psgc)])));
 const segment = (c: number | null, key: 'reach' | 'attendance' | 'decline') => (c === null ? 0 : (100 * weights[key] * c) / weightSum.value);
 
+/** Apply the change, then put the thumb back where the accepted weight is (a rejected change leaves it unchanged). */
+function onSlide(key: 'reach' | 'attendance' | 'decline', el: HTMLInputElement) {
+    update(key, +el.value / 100);
+    el.value = String(Math.round(weights[key] * 100));
+}
+
 const SLIDERS = [
     { key: 'reach', label: 'Low applications' },
     { key: 'attendance', label: 'Low attendance' },
@@ -54,7 +60,7 @@ const active = (key: 'reach' | 'attendance' | 'decline') => scored.value.some((s
                             :value="Math.round(weights[s.key] * 100)"
                             :disabled="!active(s.key)"
                             class="mt-1 w-full accent-[var(--accent)] disabled:opacity-40"
-                            @input="update(s.key, +($event.target as HTMLInputElement).value / 100)"
+                            @input="onSlide(s.key, $event.target as HTMLInputElement)"
                         />
                         <p v-if="!active(s.key)" class="text-xs text-muted">Not available in this dataset.</p>
                     </div>
