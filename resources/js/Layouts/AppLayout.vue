@@ -9,7 +9,8 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 defineProps<{ bleed?: boolean }>();
-const dataset = computed(() => usePage<PageProps>().props.dataset);
+const page = usePage<PageProps>();
+const dataset = computed(() => page.props.dataset);
 </script>
 
 <template>
@@ -38,8 +39,10 @@ const dataset = computed(() => usePage<PageProps>().props.dataset);
         </header>
         <div class="border-b border-line bg-bg"><WorkflowStepper /></div>
         <main :class="bleed ? 'flex-1' : 'mx-auto w-full max-w-screen-xl flex-1 px-4 py-8 sm:px-6'">
-            <header v-if="$slots.header && !bleed" class="mb-6"><slot name="header" /></header>
-            <slot />
+            <div :key="page.component" class="page-enter">
+                <header v-if="$slots.header && !bleed" class="mb-6"><slot name="header" /></header>
+                <slot />
+            </div>
         </main>
     </div>
 </template>

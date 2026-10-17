@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CountUp from '@/Components/CountUp.vue';
 import Funnel from '@/Components/Funnel.vue';
 import StatusPill from '@/Components/StatusPill.vue';
 import { count, fixed, pct, regionShare, signedPct } from '@/lib/format';
@@ -35,10 +36,10 @@ const stages = computed(() => {
     ];
 });
 const stats = computed(() => [
-    { label: `Applicants in ${props.cycle}`, value: hidden.value ? '—' : count(props.row.applicants), sub: props.row.prior_applicants !== null ? `${count(props.row.prior_applicants)} in ${props.priorCycle ?? 'the prior cycle'}` : '' },
-    { label: 'Applications per 1,000', value: fixed(props.row.rate_per_1000), sub: props.row.grade6_pop !== null ? `${count(props.row.grade6_pop)} Grade 6 learners` : 'No Grade 6 count' },
-    { label: 'Exam attendance', value: pct(props.row.attendance), sub: 'of those who applied' },
-    { label: `Change vs ${props.priorCycle ?? 'prior cycle'}`, value: signedPct(props.row.change), sub: 'in applications' },
+    { label: `Applicants in ${props.cycle}`, value: hidden.value ? null : props.row.applicants, fmt: (n: number) => count(Math.round(n)), sub: props.row.prior_applicants !== null ? `${count(props.row.prior_applicants)} in ${props.priorCycle ?? 'the prior cycle'}` : '' },
+    { label: 'Applications per 1,000', value: props.row.rate_per_1000, fmt: (n: number) => fixed(n), sub: props.row.grade6_pop !== null ? `${count(props.row.grade6_pop)} Grade 6 learners` : 'No Grade 6 count' },
+    { label: 'Exam attendance', value: props.row.attendance, fmt: (n: number) => pct(n), sub: 'of those who applied' },
+    { label: `Change vs ${props.priorCycle ?? 'prior cycle'}`, value: props.row.change, fmt: (n: number) => signedPct(n), sub: 'in applications' },
 ]);
 </script>
 
@@ -63,14 +64,14 @@ const stats = computed(() => [
         </p>
 
         <div class="flex items-baseline gap-2">
-            <span class="num font-display text-5xl font-bold leading-none">{{ rank ? `#${rank}` : '—' }}</span>
+            <CountUp class="font-display text-5xl font-bold leading-none" :value="rank" :format="(n) => `#${Math.round(n)}`" />
             <span class="text-sm text-muted">{{ rank ? `of ${ranked} ranked municipalities` : 'Not ranked' }}</span>
         </div>
 
         <dl class="grid grid-cols-2 gap-x-5 gap-y-4">
             <div v-for="s in stats" :key="s.label">
                 <dt class="label">{{ s.label }}</dt>
-                <dd class="num font-display text-2xl font-bold leading-tight">{{ s.value }}</dd>
+                <dd class="font-display text-2xl font-bold leading-tight"><CountUp :value="s.value" :format="s.fmt" /></dd>
                 <dd v-if="s.sub" class="text-[0.8125rem] text-muted">{{ s.sub }}</dd>
             </div>
         </dl>

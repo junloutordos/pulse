@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import AppLayout from '@/Layouts/AppLayout.vue';
 import DataNotices from '@/Components/DataNotices.vue';
 import MapLegend from '@/Components/MapLegend.vue';
 import MunicipalityDetail from '@/Components/MunicipalityDetail.vue';
 import MunicipalityMap, { MapTip } from '@/Components/MunicipalityMap.vue';
 import SelectField from '@/Components/SelectField.vue';
 import Segmented from '@/Components/Segmented.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { binOf, legendLabels, quantileBreaks } from '@/lib/breaks';
 import { fixed, pct, signedPct } from '@/lib/format';
 import { useThemeColors } from '@/lib/themeColors';
@@ -14,6 +14,9 @@ import { PageProps } from '@/types';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, usePage } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
+
+// The map fills the screen under the header, so this page asks the persistent layout for its full-bleed variant.
+defineOptions({ layout: (h: typeof import('vue').h, page: unknown) => h(AppLayout, { bleed: true }, () => page) });
 
 const props = defineProps<{ rows: MunicipalityRow[]; metrics: { key: string; label: string }[] }>();
 const dataset = computed(() => usePage<PageProps>().props.dataset!);
@@ -119,7 +122,6 @@ const options = computed(() => [...props.rows].sort((a, b) => a.name.localeCompa
 
 <template>
     <Head title="Map" />
-    <AppLayout bleed>
         <div class="lg:relative lg:h-[calc(100svh-8.75rem)] lg:min-h-[38rem]">
             <div class="h-[56svh] min-h-[22rem] lg:absolute lg:inset-0 lg:h-auto">
                 <MunicipalityMap :shape="shape" :fills="fills" :selected="selected" :tips="tips" controls-class="lg:right-[24rem]" :padding="padding" @select="selected = $event" />
@@ -165,5 +167,4 @@ const options = computed(() => [...props.rows].sort((a, b) => a.name.localeCompa
                 </aside>
             </div>
         </div>
-    </AppLayout>
 </template>

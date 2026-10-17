@@ -2,15 +2,15 @@
 import DataNotices from '@/Components/DataNotices.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import Segmented from '@/Components/Segmented.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { suggestedFocus } from '@/lib/focus';
 import { fixed, pct, signedPct } from '@/lib/format';
 import { PRESETS, rankBand } from '@/lib/rankBand';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
+import { biggestMover, rankDeltas, Ranks } from '@/lib/rankDeltas';
 import { Head, Link } from '@inertiajs/vue3';
-import { ArrowRight } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-vue-next';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 const props = defineProps<{ rows: MunicipalityRow[]; canPlan: boolean }>();
 const { weights, message, scored, available, update, applyPreset } = useWeights(computed(() => props.rows));
@@ -22,6 +22,20 @@ const weightSum = computed(() => {
     const s = scored.value.find((r) => r.score !== null);
     return (['reach', 'attendance', 'decline'] as const).reduce((sum, k) => sum + (s && s[`c_${k}`] !== null ? weights[k] : 0), 0) || 1;
 });
+
+// When weights change, rows glide to their new places and say how far each moved for a moment.
+const rankMap = computed<Ranks>(() => new Map(ranked.value.map((s) => [s.psgc, s.rank!])));
+const deltas = ref<Record<string, number>>({});
+const announcement = ref('');
+let clear = 0;
+watch(rankMap, (next, prev) => {
+    deltas.value = rankDeltas(prev ?? null, next);
+    const mover = biggestMover(prev ?? null, next);
+    announcement.value = mover ? `${byPsgc.value.get(mover.psgc)!.name} moved from rank ${mover.from} to rank ${mover.to}.` : '';
+    clearTimeout(clear);
+    clear = window.setTimeout(() => (deltas.value = {}), 2600);
+});
+onBeforeUnmount(() => clearTimeout(clear));
 
 const bands = computed(() => new Map(ranked.value.map((s) => [s.psgc, rankBand(props.rows, PRESETS, s.psgc)])));
 const segment = (c: number | null, key: 'reach' | 'attendance' | 'decline') => (c === null ? 0 : (100 * weights[key] * c) / weightSum.value);
@@ -48,7 +62,6 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
 
 <template>
     <Head title="Priority list" />
-    <AppLayout>
         <div class="grid gap-8">
             <PageHeader>
                 <template #title>Explainable outreach priority</template>
@@ -105,9 +118,14 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                                     <th>Rank band</th><th>Suggested focus</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <TransitionGroup tag="tbody" name="rows">
                                 <tr v-for="s in ranked" :key="s.psgc">
-                                    <td class="num text-right font-display text-xl font-bold">{{ s.rank }}</td>
+                                    <td class="text-right">
+                                        <span class="num font-display text-xl font-bold">{{ s.rank }}</span>
+                                        <span v-if="deltas[s.psgc]" class="num ml-1 inline-flex items-center text-[0.75rem] font-semibold" :class="deltas[s.psgc] > 0 ? 'text-accent' : 'text-muted'" aria-hidden="true">
+                                            <ArrowUp v-if="deltas[s.psgc] > 0" class="h-3 w-3" /><ArrowDown v-else class="h-3 w-3" />{{ Math.abs(deltas[s.psgc]) }}
+                                        </span>
+                                    </td>
                                     <td class="min-w-[11rem]">
                                         <Link :href="route('map', { psgc: s.psgc })" class="font-semibold hover:underline">{{ byPsgc.get(s.psgc)!.name }}</Link>
                                         <div class="text-[0.8125rem] text-muted">{{ byPsgc.get(s.psgc)!.province }}</div>
@@ -116,9 +134,9 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                                         <div class="flex items-center gap-2.5">
                                             <span class="num w-7 text-right font-semibold">{{ fixed(s.score, 0) }}</span>
                                             <div class="flex h-2 w-28 overflow-hidden rounded-full bg-surface-2" role="img" :aria-label="`Score ${fixed(s.score, 0)}: applications ${fixed(segment(s.c_reach, 'reach'), 0)}, attendance ${fixed(segment(s.c_attendance, 'attendance'), 0)}, decline ${fixed(segment(s.c_decline, 'decline'), 0)}`">
-                                                <span class="bg-q4" :style="{ width: `${segment(s.c_reach, 'reach')}%` }" />
-                                                <span class="bg-q2" :style="{ width: `${segment(s.c_attendance, 'attendance')}%` }" />
-                                                <span class="bg-q1" :style="{ width: `${segment(s.c_decline, 'decline')}%` }" />
+                                                <span class="bg-q4 transition-[width] duration-[var(--dur-3)] ease-[var(--ease-out)]" :style="{ width: `${segment(s.c_reach, 'reach')}%` }" />
+                                                <span class="bg-q2 transition-[width] duration-[var(--dur-3)] ease-[var(--ease-out)]" :style="{ width: `${segment(s.c_attendance, 'attendance')}%` }" />
+                                                <span class="bg-q1 transition-[width] duration-[var(--dur-3)] ease-[var(--ease-out)]" :style="{ width: `${segment(s.c_decline, 'decline')}%` }" />
                                             </div>
                                         </div>
                                     </td>
@@ -133,9 +151,10 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                                     </td>
                                     <td class="min-w-[12rem] text-[0.8125rem]">{{ suggestedFocus(s, weights) }}</td>
                                 </tr>
-                            </tbody>
+                            </TransitionGroup>
                         </table>
                     </div>
+                    <p class="sr-only" role="status" aria-live="polite">{{ announcement }}</p>
 
                     <div>
                         <h2 class="mb-2 text-lg font-bold">Not ranked ({{ notRanked.length }})</h2>
@@ -149,5 +168,4 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                 </section>
             </div>
         </div>
-    </AppLayout>
 </template>

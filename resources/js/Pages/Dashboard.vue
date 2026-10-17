@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppLayout from '@/Layouts/AppLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import { PageProps } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/vue3';
@@ -21,7 +20,6 @@ const refreshed = computed(() => (dataset.value ? new Date(dataset.value.refresh
 
 <template>
     <Head title="Start" />
-    <AppLayout>
         <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <div class="grid content-start gap-8">
                 <PageHeader>
@@ -55,5 +53,4 @@ const refreshed = computed(() => (dataset.value ? new Date(dataset.value.refresh
                 <p class="mt-4 rounded bg-surface-2 p-3 text-[0.8125rem] text-muted">PULSE supports decisions. Staff validate every suggestion, and nothing here claims to explain why participation differs.</p>
             </aside>
         </div>
-    </AppLayout>
 </template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import LineageStrip from '@/Components/LineageStrip.vue';
 import PageHeader from '@/Components/PageHeader.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { count } from '@/lib/format';
 import { Head, Link } from '@inertiajs/vue3';
 import { CircleAlert, CircleCheck } from 'lucide-vue-next';
@@ -63,7 +62,6 @@ const RULES = [
 
 <template>
     <Head title="Data trust" />
-    <AppLayout>
         <div class="grid gap-10">
             <PageHeader>
                 <template #title>Can we trust this dataset?</template>
@@ -154,5 +152,4 @@ const RULES = [
                 </div>
             </section>
         </div>
-    </AppLayout>
 </template>

@@ -2,7 +2,6 @@
 import DataNotices from '@/Components/DataNotices.vue';
 import MunicipalityDetail from '@/Components/MunicipalityDetail.vue';
 import PageHeader from '@/Components/PageHeader.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { fixed, pct } from '@/lib/format';
 import { useWeights } from '@/lib/useWeights';
 import { PageProps } from '@/types';
@@ -63,7 +62,6 @@ const labelled = computed(() => {
 
 <template>
     <Head title="Pipeline" />
-    <AppLayout>
         <div class="grid gap-8">
             <PageHeader>
                 <template #title>Is the gap in applying or in sitting the exam?</template>
@@ -126,5 +124,4 @@ const labelled = computed(() => {
                 </aside>
             </div>
         </div>
-    </AppLayout>
 </template>

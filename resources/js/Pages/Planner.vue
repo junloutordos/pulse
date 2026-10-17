@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import MunicipalityMap, { MapTip } from '@/Components/MunicipalityMap.vue';
 import PageHeader from '@/Components/PageHeader.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { suggestedFocus } from '@/lib/focus';
 import { fixed } from '@/lib/format';
 import { shortlist } from '@/lib/shortlist';
@@ -64,7 +63,6 @@ const tips = computed<Record<string, MapTip>>(() =>
 
 <template>
     <Head title="Outreach planner" />
-    <AppLayout>
         <div class="grid gap-8">
             <PageHeader>
                 <template #title>How many municipalities can we serve this cycle?</template>
@@ -127,5 +125,4 @@ const tips = computed<Record<string, MapTip>>(() =>
                 </section>
             </div>
         </div>
-    </AppLayout>
 </template>

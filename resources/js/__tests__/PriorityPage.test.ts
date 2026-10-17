@@ -22,7 +22,7 @@ const row = (i: number, over: Partial<MunicipalityRow> = {}): MunicipalityRow =>
 });
 const rows = [row(1), row(2), row(3), row(4, { status: 'low' }), row(5, { status: 'suppressed', rate_per_1000: null, attendance: null, change: null, applicants: null })];
 
-const mountPage = () => mount(Priority, { props: { rows, canPlan: true }, global: { mocks: { route: (name: string) => `/${name}` } } });
+const mountPage = () => mount(Priority, { props: { rows, canPlan: true }, global: { stubs: { TransitionGroup: false }, mocks: { route: (name: string) => `/${name}` } } });
 
 beforeEach(() => {
     sessionStorage.clear();

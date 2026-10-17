@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import PageHeader from '@/Components/PageHeader.vue';
 import SelectField from '@/Components/SelectField.vue';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, router } from '@inertiajs/vue3';
@@ -24,7 +23,6 @@ function complete(id: number) {
 
 <template>
     <Head title="Brief and register" />
-    <AppLayout>
         <div class="grid gap-10">
             <PageHeader>
                 <template #title>Evidence brief and action register</template>
@@ -68,5 +66,4 @@ function complete(id: number) {
                 </div>
             </section>
         </div>
-    </AppLayout>
 </template>

@@ -54,6 +54,20 @@
 }
 
 @layer components {
+    /* Motion: short, quiet, and only where it answers an action. Reduced motion is handled globally in @layer base. */
+    .page-enter {
+        animation: page-enter var(--dur-2) var(--ease-out) both;
+    }
+    @keyframes page-enter {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: none; }
+    }
+
+    .rise-in {
+        animation: page-enter var(--dur-3) var(--ease-out) both;
+        animation-delay: calc(var(--i, 0) * 40ms);
+    }
+
     .num {
         font-variant-numeric: tabular-nums lining-nums;
     }
@@ -154,4 +168,9 @@
     .data-table tbody tr:last-child td {
         box-shadow: none;
     }
+}
+
+/* Outside any layer on purpose: Vue builds this class name from <TransitionGroup name="rows">, so Tailwind never sees it in a template and would prune it. */
+.rows-move {
+    transition: transform var(--dur-3) var(--ease-out);
 }

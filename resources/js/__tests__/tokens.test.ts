@@ -39,7 +39,11 @@ describe('design tokens', () => {
     });
 
     it('defines type roles and radius once, on the light block', () => {
-        for (const token of ['font-display', 'font-body', 'radius', 'radius-sm', 'radius-lg']) expect(light.has(token)).toBe(true);
+        for (const token of ['font-display', 'font-body', 'radius', 'radius-sm', 'radius-lg', 'dur-1', 'dur-2', 'dur-3', 'ease-out', 'ease-in-out']) expect(light.has(token)).toBe(true);
+    });
+
+    it('keeps motion short: no duration above 400ms', () => {
+        for (const token of ['dur-1', 'dur-2', 'dur-3']) expect(parseInt(light.get(token)!)).toBeLessThanOrEqual(400);
     });
 
     it('uses a sans-serif display face, not a serif', () => {
