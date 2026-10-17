@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\BriefController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\PipelineController;
+use App\Http\Controllers\PriorityController;
+use App\Http\Controllers\TrustController;
 use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -21,6 +25,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/trust', [TrustController::class, 'index'])->name('trust');
+    Route::get('/map', [MapController::class, 'index'])->name('map');
+    Route::get('/data/boundaries.geojson', [MapController::class, 'boundaries'])->name('boundaries');
+    Route::get('/pipeline', [PipelineController::class, 'index'])->name('pipeline');
+    Route::get('/priority', [PriorityController::class, 'index'])->name('priority');
     Route::get('/planner', [PlannerController::class, 'index'])->name('planner');
     Route::get('/brief', [BriefController::class, 'index'])->name('brief');
     Route::get('/brief/{psgc}', [BriefController::class, 'show'])->name('brief.show');

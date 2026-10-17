@@ -25,6 +25,11 @@ class DatasetVersion extends Model
         return static::where('is_active', true)->first();
     }
 
+    public static function activeOrFail(): self
+    {
+        return static::active() ?? abort(409, 'No active dataset.');
+    }
+
     public function activate(): void
     {
         static::where('id', '!=', $this->id)->update(['is_active' => false]);
