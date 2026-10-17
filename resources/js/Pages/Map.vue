@@ -40,9 +40,9 @@ const selected = ref<string>(first.psgc);
 const SHAPE_KEY = 'pulse-map-shape';
 const readShape = (): 'tile' | 'boundary' => {
     try {
-        return localStorage.getItem(SHAPE_KEY) === 'boundary' ? 'boundary' : 'tile';
+        return localStorage.getItem(SHAPE_KEY) === 'tile' ? 'tile' : 'boundary';
     } catch {
-        return 'tile';
+        return 'boundary';
     }
 };
 const shape = ref<'tile' | 'boundary'>(readShape());

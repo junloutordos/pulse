@@ -83,7 +83,7 @@ const tips = computed<Record<string, MapTip>>(() =>
                         <p class="mt-2 text-[0.8125rem] text-muted">{{ filled }} of {{ list.picks.length }} slots filled</p>
                     </div>
                     <div class="panel h-[22rem] overflow-hidden lg:h-[26rem]">
-                        <MunicipalityMap shape="tile" :fills="fills" :highlight="highlight" :tips="tips" :padding="{ top: 24, bottom: 24, left: 24, right: 24 }" :show-labels="false" />
+                        <MunicipalityMap shape="boundary" :fills="fills" :highlight="highlight" :tips="tips" :padding="{ top: 24, bottom: 24, left: 24, right: 24 }" :show-labels="false" />
                     </div>
                     <p class="text-[0.8125rem] text-muted">Outlined hexagons are the suggested shortlist. Shading is the priority score at the current weights.</p>
                 </aside>
