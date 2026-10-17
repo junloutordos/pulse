@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/brief/{psgc}/pdf', [BriefController::class, 'pdf'])->name('brief.pdf');
     Route::patch('/register/{entry}', [BriefController::class, 'complete'])->middleware('can:plan')->name('register.complete');
     Route::post('/planner/decisions', [PlannerController::class, 'decide'])->middleware('can:plan')->name('planner.decide');
+    Route::delete('/planner/decisions/{psgc}', [PlannerController::class, 'undo'])->middleware('can:plan')->name('planner.undo');
 });
 
 Route::middleware('auth')->group(function () {

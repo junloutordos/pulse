@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\DatasetVersion;
+use App\Models\Municipality;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,6 +36,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'municipalities' => fn () => $request->user() ? Municipality::orderBy('name')->get(['psgc', 'name', 'province']) : [],
             'dataset' => fn () => ($v = DatasetVersion::active()) ? [
                 'version' => $v->version,
                 'source' => $v->source,

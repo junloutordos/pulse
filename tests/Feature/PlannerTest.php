@@ -131,3 +131,38 @@ test('a planner who recorded decisions can delete their account and the decision
         ->and(PlannerDecision::count())->toBe(1)
         ->and(PlannerDecision::first()->user_id)->toBeNull();
 });
+
+test('a planner can undo a decision, which removes it and its planned register entry', function () {
+    $planner = User::factory()->planner()->create();
+    $this->actingAs($planner)->post('/planner/decisions', decision());
+
+    $this->actingAs($planner)->delete('/planner/decisions/'.$this->okPsgc)->assertRedirect();
+
+    expect(PlannerDecision::count())->toBe(0)->and(ActionRegisterEntry::count())->toBe(0);
+});
+
+test('undo is refused once the action is completed', function () {
+    $planner = User::factory()->planner()->create();
+    $this->actingAs($planner)->post('/planner/decisions', decision());
+    ActionRegisterEntry::first()->update(['status' => 'completed', 'completed_on' => today()]);
+
+    $this->actingAs($planner)->delete('/planner/decisions/'.$this->okPsgc)->assertSessionHasErrors('psgc');
+
+    expect(PlannerDecision::count())->toBe(1)->and(ActionRegisterEntry::count())->toBe(1);
+});
+
+test('viewers and guests cannot undo decisions', function () {
+    $this->actingAs(User::factory()->planner()->create())->post('/planner/decisions', decision());
+
+    $this->actingAs(User::factory()->create())->delete('/planner/decisions/'.$this->okPsgc)->assertForbidden();
+    auth()->logout();
+    $this->delete('/planner/decisions/'.$this->okPsgc)->assertRedirect('/login');
+
+    expect(PlannerDecision::count())->toBe(1);
+});
+
+test('undoing a decision that does not exist is a harmless no-op', function () {
+    $this->actingAs(User::factory()->planner()->create())->delete('/planner/decisions/'.$this->okPsgc)->assertRedirect();
+
+    expect(PlannerDecision::count())->toBe(0);
+});

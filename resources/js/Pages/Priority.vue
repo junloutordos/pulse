@@ -6,15 +6,24 @@ import { suggestedFocus } from '@/lib/focus';
 import { fixed, pct, signedPct } from '@/lib/format';
 import { PRESETS, rankBand } from '@/lib/rankBand';
 import { select, selected } from '@/lib/selection';
-import { useWeights } from '@/lib/useWeights';
+import { notify } from '@/lib/toasts';
+import { copyLink, formatWeights, parseWeights, readParam, replaceParams } from '@/lib/urlState';
+import { setWeights, useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
 import { biggestMover, rankDeltas, Ranks } from '@/lib/rankDeltas';
 import { Head, Link } from '@inertiajs/vue3';
-import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-vue-next';
+import { ArrowDown, ArrowRight, ArrowUp, Link2 } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 const props = defineProps<{ rows: MunicipalityRow[]; canPlan: boolean }>();
+// A shared link can carry the weights; useWeights then re-checks them against this dataset.
+const fromLink = parseWeights(readParam('w'));
+if (fromLink) setWeights(fromLink);
 const { weights, message, scored, available, update, applyPreset } = useWeights(computed(() => props.rows));
+watch(weights, () => replaceParams({ w: formatWeights(weights) }), { deep: true, immediate: true });
+async function share() {
+    notify((await copyLink()) ? { message: 'Link copied' } : { message: 'Could not copy. Copy the address from the browser bar.', tone: 'error' });
+}
 
 const byPsgc = computed(() => new Map(props.rows.map((r) => [r.psgc, r])));
 const ranked = computed(() => scored.value.filter((s) => s.rank !== null).sort((a, b) => a.rank! - b.rank!));
@@ -68,6 +77,7 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                 <template #title>Explainable outreach priority</template>
                 Weights are planning preferences, not predictions. Move them and watch which places keep their rank.
                 <template #actions>
+                    <button type="button" class="btn h-10" @click="share"><Link2 class="h-4 w-4" aria-hidden="true" />Copy link</button>
                     <Link :href="route('planner')" class="btn btn-primary h-10">Plan outreach with these weights <ArrowRight class="h-4 w-4" aria-hidden="true" /></Link>
                 </template>
             </PageHeader>

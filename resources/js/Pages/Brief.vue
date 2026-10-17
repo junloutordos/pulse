@@ -2,6 +2,7 @@
 import PageHeader from '@/Components/PageHeader.vue';
 import SelectField from '@/Components/SelectField.vue';
 import { initialSelection, select } from '@/lib/selection';
+import { notify } from '@/lib/toasts';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, router } from '@inertiajs/vue3';
@@ -19,7 +20,11 @@ watch(selected, (v) => select(v), { immediate: true });
 const options = computed(() => [...props.rows].sort((a, b) => a.name.localeCompare(b.name) || a.province.localeCompare(b.province)));
 
 function complete(id: number) {
-    router.patch(route('register.complete', id), {}, { preserveScroll: true });
+    router.patch(route('register.complete', id), {}, {
+        preserveScroll: true,
+        onSuccess: () => notify({ message: 'Marked completed' }),
+        onError: (e) => notify({ message: Object.values(e)[0] ?? 'Something went wrong. Try again.', tone: 'error' }),
+    });
 }
 </script>
 

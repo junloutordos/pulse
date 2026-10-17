@@ -5,6 +5,7 @@ import { suggestedFocus } from '@/lib/focus';
 import { fixed } from '@/lib/format';
 import { shortlist } from '@/lib/shortlist';
 import { useThemeColors } from '@/lib/themeColors';
+import { notify } from '@/lib/toasts';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, Link, router } from '@inertiajs/vue3';
@@ -34,12 +35,35 @@ const REASONS = ['Matches local knowledge', 'Already served this cycle', 'Data l
 const reason = reactive<Record<string, string>>({});
 const busy = ref<string | null>(null);
 
+const firstError = (errors: Record<string, string>) => Object.values(errors)[0] ?? 'Something went wrong. Try again.';
+
+function post(payload: Record<string, string | number | null | Record<string, number>>, onSuccess: () => void) {
+    router.post(route('planner.decide'), payload, {
+        preserveScroll: true,
+        onSuccess,
+        onError: (errors) => notify({ message: firstError(errors), tone: 'error' }),
+        onFinish: () => (busy.value = null),
+    });
+}
+
+/** Puts a municipality back the way it was before the last choice: either nothing, or the earlier decision. */
+function undo(psgc: string, before: (Decision & { weights?: Record<string, number> }) | undefined, beforeAction: string | null) {
+    const done = () => notify({ message: 'Undone' });
+    if (!before) {
+        router.delete(route('planner.undo', psgc), { preserveScroll: true, onSuccess: done, onError: (e) => notify({ message: firstError(e), tone: 'error' }) });
+        return;
+    }
+    post({ psgc, status: before.status, reason: before.reason, action: before.status === 'accepted' ? beforeAction : null, weights: before.weights ?? { ...weights } }, done);
+}
+
 function decide(psgc: string, status: 'accepted' | 'deferred', action: string) {
     busy.value = psgc;
-    router.post(
-        route('planner.decide'),
+    const before = props.decisions.find((d) => d.psgc === psgc) as (Decision & { weights?: Record<string, number> }) | undefined;
+    const beforeAction = props.register.find((r) => r.psgc === psgc)?.action ?? null;
+    const name = byPsgc.value.get(psgc)!.name;
+    post(
         { psgc, status, reason: reason[psgc] ?? REASONS[0], action: status === 'accepted' ? action : null, weights: { ...weights } },
-        { preserveScroll: true, onFinish: () => (busy.value = null) },
+        () => notify({ message: `${status === 'accepted' ? 'Accepted' : 'Deferred'} ${name}`, action: { label: 'Undo', run: () => undo(psgc, before, beforeAction) } }),
     );
 }
 

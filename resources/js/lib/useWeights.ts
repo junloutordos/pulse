@@ -17,6 +17,11 @@ function load(): Weights {
 // One set of weights shared by every screen, so Priority, Planner and Brief agree.
 const state = reactive<Weights>(load());
 
+/** Used when a shared link carries weights. The first useWeights call re-checks them against the dataset. */
+export function setWeights(w: Weights): void {
+    Object.assign(state, w);
+}
+
 export function resetWeights(): void {
     Object.assign(state, PRESETS.Balanced);
 }

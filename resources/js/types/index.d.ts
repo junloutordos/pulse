@@ -21,4 +21,5 @@ export type PageProps<
         user: User;
     };
     dataset: Dataset | null;
+    municipalities: { psgc: string; name: string; province: string }[];
 };

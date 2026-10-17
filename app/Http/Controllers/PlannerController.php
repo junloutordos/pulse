@@ -86,4 +86,23 @@ class PlannerController extends Controller
 
         return back();
     }
+
+    /** Undo: remove the decision and its planned register entry. A completed action cannot be undone. */
+    public function undo(string $psgc): RedirectResponse
+    {
+        Gate::authorize('plan');
+        $version = DatasetVersion::activeOrFail();
+        $key = ['dataset_version_id' => $version->id, 'psgc' => $psgc];
+
+        DB::transaction(function () use ($key) {
+            $entry = ActionRegisterEntry::where($key)->first();
+            if ($entry?->status === 'completed') {
+                throw ValidationException::withMessages(['psgc' => 'This action is already completed and cannot be undone.']);
+            }
+            $entry?->delete();
+            PlannerDecision::where($key)->delete();
+        });
+
+        return back();
+    }
 }

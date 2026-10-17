@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import BrandMark from '@/Components/BrandMark.vue';
+import CommandPalette from '@/Components/CommandPalette.vue';
 import SyntheticBanner from '@/Components/SyntheticBanner.vue';
+import ToastHost from '@/Components/ToastHost.vue';
 import ThemeToggle from '@/Components/ThemeToggle.vue';
 import UserMenu from '@/Components/UserMenu.vue';
 import WorkflowStepper from '@/Components/WorkflowStepper.vue';
 import { PageProps } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Search } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 defineProps<{ bleed?: boolean }>();
 const page = usePage<PageProps>();
 const dataset = computed(() => page.props.dataset);
+const palette = ref(false);
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
 </script>
 
 <template>
@@ -31,6 +36,11 @@ const dataset = computed(() => page.props.dataset);
                         {{ dataset.source === 'synthetic' ? 'Synthetic data' : 'Real data' }}
                         <span class="text-shell-ink/60">{{ dataset.cycle }} cycle</span>
                     </span>
+                    <button type="button" class="mr-1 hidden h-9 items-center gap-2 rounded-full bg-white/10 px-3 text-xs text-shell-ink/80 transition-colors hover:bg-white/15 md:inline-flex" @click="palette = true">
+                        <Search class="h-3.5 w-3.5" aria-hidden="true" />Jump to
+                        <kbd class="rounded bg-white/10 px-1.5 py-0.5 font-sans text-[0.6875rem]">{{ isMac ? '⌘' : 'Ctrl' }} K</kbd>
+                    </button>
+                    <button type="button" class="icon-btn hover:!bg-white/10 md:hidden" @click="palette = true"><Search class="h-[18px] w-[18px]" aria-hidden="true" /><span class="sr-only">Jump to a screen or municipality</span></button>
                     <ThemeToggle />
                     <UserMenu />
                 </div>
@@ -44,5 +54,7 @@ const dataset = computed(() => page.props.dataset);
                 <slot />
             </div>
         </main>
+        <ToastHost />
+        <CommandPalette v-model="palette" />
     </div>
 </template>

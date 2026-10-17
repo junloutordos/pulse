@@ -41,3 +41,17 @@ test('inactive versions are not shared', function () {
         fn (Assert $page) => $page->where('dataset', null)
     );
 });
+
+test('signed-in users get the municipality list for the jump bar, guests get nothing', function () {
+    app(DatasetImporter::class)->import(fixtureDir());
+
+    $this->actingAs(User::factory()->create())->get('/dashboard')->assertInertia(
+        fn (Assert $page) => $page->has('municipalities', 6)->has('municipalities.0', fn (Assert $m) => $m->hasAll(['psgc', 'name', 'province']))
+    );
+});
+
+test('the municipality list is not exposed on the sign-in page', function () {
+    app(DatasetImporter::class)->import(fixtureDir());
+
+    $this->get('/login')->assertInertia(fn (Assert $page) => $page->where('municipalities', []));
+});

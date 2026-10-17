@@ -10,10 +10,13 @@ import { binOf, legendLabels, quantileBreaks } from '@/lib/breaks';
 import { fixed, pct, signedPct } from '@/lib/format';
 import { initialSelection, select } from '@/lib/selection';
 import { useThemeColors } from '@/lib/themeColors';
+import { notify } from '@/lib/toasts';
+import { copyLink, readParam, replaceParams } from '@/lib/urlState';
 import { useWeights } from '@/lib/useWeights';
 import { PageProps } from '@/types';
 import { MunicipalityRow } from '@/types/rows';
 import { Head, usePage } from '@inertiajs/vue3';
+import { Link2 } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
 // The map fills the screen under the header, so this page asks the persistent layout for its full-bleed variant.
@@ -36,7 +39,8 @@ const METRIC_HELP: Record<string, string> = {
 };
 const wide = typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 1024px)').matches;
 const padding = wide ? { top: 32, bottom: 32, left: 380, right: 420 } : { top: 24, bottom: 24, left: 24, right: 24 };
-const metric = ref<string>('rate');
+const metricParam = readParam('metric');
+const metric = ref<string>(props.metrics.some((m) => m.key === metricParam) ? metricParam! : 'rate');
 const wanted = new URLSearchParams(window.location.search).get('psgc');
 const topRanked = props.rows.find((r) => rank.value.get(r.psgc)?.rank === 1)?.psgc ?? props.rows[0].psgc;
 const selected = ref<string>(initialSelection(wanted, props.rows.map((r) => r.psgc), topRanked));
@@ -51,7 +55,8 @@ const readShape = (): 'tile' | 'boundary' => {
         return 'boundary';
     }
 };
-const shape = ref<'tile' | 'boundary'>(readShape());
+const shapeParam = readParam('shape');
+const shape = ref<'tile' | 'boundary'>(shapeParam === 'tile' || shapeParam === 'boundary' ? shapeParam : readShape());
 watch(shape, (v) => {
     try {
         localStorage.setItem(SHAPE_KEY, v);
@@ -59,6 +64,12 @@ watch(shape, (v) => {
         // The choice then lasts for this page view only.
     }
 });
+
+// What is on screen is in the address, so a view can be shared or bookmarked.
+watch([metric, shape, selected], () => replaceParams({ metric: metric.value, shape: shape.value, psgc: selected.value }), { immediate: true });
+async function share() {
+    notify((await copyLink()) ? { message: 'Link copied' } : { message: 'Could not copy. Copy the address from the browser bar.', tone: 'error' });
+}
 
 const FORMAT: Record<string, (v: number) => string> = {
     rate: (v) => fixed(v, 1),
@@ -133,9 +144,12 @@ const options = computed(() => [...props.rows].sort((a, b) => a.name.localeCompa
             <div class="grid gap-4 p-4 lg:contents">
               <div class="grid gap-4 lg:pointer-events-none lg:absolute lg:bottom-4 lg:left-4 lg:top-4 lg:w-[21rem] lg:grid-rows-[minmax(0,1fr)_auto] [&>*]:pointer-events-auto">
                 <section class="float grid content-start gap-4 p-4 lg:overflow-y-auto" aria-labelledby="map-title">
-                    <div>
-                        <h1 id="map-title" class="text-xl font-bold leading-tight">Participation across Caraga</h1>
-                        <p class="text-sm text-muted">{{ dataset.cycle }} cycle</p>
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <h1 id="map-title" class="text-xl font-bold leading-tight">Participation across Caraga</h1>
+                            <p class="text-sm text-muted">{{ dataset.cycle }} cycle</p>
+                        </div>
+                        <button type="button" class="icon-btn -mr-1.5 -mt-1" @click="share"><Link2 class="h-4 w-4" aria-hidden="true" /><span class="sr-only">Copy a link to this view</span></button>
                     </div>
                     <DataNotices :rows="rows" />
                     <div role="radiogroup" aria-label="Colour the map by" class="grid gap-0.5">
