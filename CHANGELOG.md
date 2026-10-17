@@ -8,3 +8,4 @@
 - PSGC matching (exact, alias, province-aware), suppression rules and reconciliation.
 - Indicators (rate per 1,000, attendance, change) and explainable priority score with shared fixtures.
 - Neighbours, groupable municipalities and local Moran's I clusters (two-sided, seeded).
+- Source protocol, versioned output writer with checksums, and the pipeline CLI.
