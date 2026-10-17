@@ -4,6 +4,7 @@ from pathlib import Path
 from .geo_match import load_aliases
 from .reference import load_reference
 from .run import run_pipeline
+from .sources.lakehouse import LakehouseSource
 from .sources.local import LocalFilesSource
 from .sources.synthetic import SyntheticSource
 
@@ -14,11 +15,14 @@ def main(argv: list[str] | None = None) -> str:
     parser = argparse.ArgumentParser(prog="pulse_pipeline")
     sub = parser.add_subparsers(dest="command", required=True)
     run = sub.add_parser("run", help="build a versioned dataset folder")
-    run.add_argument("--source", choices=["synthetic", "local"], required=True)
+    run.add_argument("--source", choices=["synthetic", "local", "lakehouse"], required=True)
     run.add_argument("--ref-dir", type=Path, required=True)
     run.add_argument("--out", type=Path, required=True)
     run.add_argument("--counts", type=Path)
     run.add_argument("--custodian", type=Path)
+    run.add_argument("--connection")
+    run.add_argument("--table")
+    run.add_argument("--custodian-table")
     run.add_argument("--aliases", type=Path, default=DEFAULT_ALIASES)
     args = parser.parse_args(argv)
 
@@ -26,6 +30,10 @@ def main(argv: list[str] | None = None) -> str:
     aliases = load_aliases(args.aliases) if args.aliases.exists() else {}
     if args.source == "synthetic":
         source = SyntheticSource(ref)
+    elif args.source == "lakehouse":
+        if not args.connection or not args.table:
+            parser.error("--connection and --table are required with --source lakehouse")
+        source = LakehouseSource(args.connection, args.table, args.custodian_table)
     else:
         if args.counts is None:
             parser.error("--counts is required with --source local")

@@ -12,3 +12,4 @@
 - Dataset import into MySQL (versioned, checksum-verified, idempotent) and the pulse:import command.
 - Roles (viewer/planner), shared dataset prop, synthetic banner.
 - TypeScript priority scoring with Python parity (shared fixtures) and Vitest.
+- Lakehouse source (DuckDB connection stand-in) and `--source lakehouse` CLI option.
