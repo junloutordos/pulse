@@ -51,7 +51,7 @@ def test_real_and_synthetic_produce_identical_schemas(tmp_path):
 def test_duplicate_rows_go_to_issues(tmp_path):
     ref = load_reference(FIXTURE)
     raw = generate_synthetic(ref)
-    raw = pd.concat([raw, raw[(raw.raw_name == "Butuan") & (raw.cycle == 2026)]], ignore_index=True)
+    raw = pd.concat([raw, raw[(raw.raw_name == "Butuan City") & (raw.cycle == 2026)]], ignore_index=True)
     raw.to_csv(tmp_path / "counts.csv", index=False)
     folder = Path(main(["run", "--source", "local", "--ref-dir", str(FIXTURE), "--out", str(tmp_path / "o"),
                         "--counts", str(tmp_path / "counts.csv")]))

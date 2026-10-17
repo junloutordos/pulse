@@ -21,6 +21,14 @@ def _norm(value) -> str | None:
     return cleaned or None
 
 
+def _core(name: str | None) -> str | None:
+    """Official PSGC writes 'City of Butuan'; people write 'Butuan City'. Compare both as 'butuan'."""
+    if name is None:
+        return None
+    name = re.sub(r"^city of ", "", name)
+    return re.sub(r" city$", "", name) or name
+
+
 def load_aliases(path: Path) -> dict[str, str]:
     data = yaml.safe_load(Path(path).read_text()) or {}
     return {str(k): str(v) for k, v in data.items()}
@@ -30,9 +38,9 @@ def match_psgc(raw: pd.DataFrame, ref: Reference, aliases: dict[str, str]) -> Ma
     by_key: dict[tuple[str, str], str] = {}
     by_name: dict[str, list[str]] = {}
     for m in ref.munis.itertuples():
-        by_key[(_norm(m.name), _norm(m.province))] = m.psgc
-        by_name.setdefault(_norm(m.name), []).append(m.psgc)
-    alias_map = {_norm(k): _norm(v) for k, v in aliases.items()}
+        by_key[(_core(_norm(m.name)), _norm(m.province))] = m.psgc
+        by_name.setdefault(_core(_norm(m.name)), []).append(m.psgc)
+    alias_map = {_core(_norm(k)): _core(_norm(v)) for k, v in aliases.items()}
 
     def resolve(name_n: str, prov_n: str | None):
         """Return (psgc, reason). psgc is None when no safe match exists."""
@@ -52,7 +60,7 @@ def match_psgc(raw: pd.DataFrame, ref: Reference, aliases: dict[str, str]) -> Ma
 
     matched_rows, issue_rows = [], []
     for row in raw.to_dict("records"):
-        name_n, prov_n = _norm(row["raw_name"]), _norm(row["raw_province"])
+        name_n, prov_n = _core(_norm(row["raw_name"])), _norm(row["raw_province"])
         psgc, reason = resolve(name_n, prov_n) if name_n else (None, "empty municipality name")
         method = "exact"
         if psgc is None and name_n in alias_map:

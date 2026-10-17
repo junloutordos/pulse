@@ -1,59 +1,44 @@
 <script setup lang="ts">
+import BrandMark from '@/Components/BrandMark.vue';
 import SyntheticBanner from '@/Components/SyntheticBanner.vue';
-import { getStoredTheme, setTheme, Theme } from '@/lib/theme';
+import ThemeToggle from '@/Components/ThemeToggle.vue';
+import UserMenu from '@/Components/UserMenu.vue';
+import WorkflowStepper from '@/Components/WorkflowStepper.vue';
 import { PageProps } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
-const page = usePage<PageProps>();
-const dataset = computed(() => page.props.dataset);
-const user = computed(() => page.props.auth.user);
-const theme = ref<Theme>(getStoredTheme());
-
-const NAV = [
-    { label: 'Data trust', route: 'trust' },
-    { label: 'Map', route: 'map' },
-    { label: 'Pipeline', route: 'pipeline' },
-    { label: 'Priority list', route: 'priority' },
-    { label: 'Planner', route: 'planner' },
-    { label: 'Brief', route: 'brief' },
-];
+defineProps<{ bleed?: boolean }>();
+const dataset = computed(() => usePage<PageProps>().props.dataset);
 </script>
 
 <template>
-    <div class="min-h-screen">
-        <header class="sticky top-0 z-20 border-b border-line bg-surface">
-            <div class="mx-auto flex max-w-screen-xl flex-wrap items-center gap-x-8 gap-y-2 px-4 py-3 sm:px-6">
-                <Link :href="route('dashboard')" class="font-display text-lg font-semibold tracking-[0.16em]">PULSE</Link>
-                <nav class="flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Primary">
-                    <Link
-                        v-for="item in NAV"
-                        :key="item.route"
-                        :href="route(item.route)"
-                        :aria-current="route().current(item.route) ? 'page' : undefined"
-                        class="border-b-2 border-transparent pb-0.5 text-muted hover:text-ink aria-[current=page]:border-accent aria-[current=page]:font-semibold aria-[current=page]:text-ink"
+    <div class="flex min-h-screen flex-col">
+        <header class="sticky top-0 z-30 bg-shell text-shell-ink">
+            <div class="mx-auto flex max-w-screen-xl items-center gap-4 px-4 py-2.5 sm:px-6">
+                <Link :href="route('dashboard')" class="flex items-center gap-2.5 text-shell-ink">
+                    <BrandMark />
+                    <span class="font-display text-xl font-bold">PULSE</span>
+                </Link>
+                <div class="ml-auto flex items-center gap-1.5">
+                    <span
+                        v-if="dataset"
+                        class="mr-1 hidden items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs sm:inline-flex"
+                        :title="`Dataset ${dataset.version}`"
                     >
-                        {{ item.label }}
-                    </Link>
-                </nav>
-                <div class="ml-auto flex flex-wrap items-center gap-3 text-xs text-muted">
-                    <span v-if="dataset" class="num border border-line px-2 py-0.5">{{ dataset.version }} · cycle {{ dataset.cycle }}</span>
-                    <label class="flex items-center gap-1">
-                        <span class="sr-only">Theme</span>
-                        <select v-model="theme" class="py-0.5 pl-2 pr-7 text-xs" @change="setTheme(theme)">
-                            <option value="system">System</option>
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                        </select>
-                    </label>
-                    <Link :href="route('profile.edit')" class="hover:text-ink">{{ user.name }} · {{ user.role }}</Link>
-                    <Link :href="route('logout')" method="post" as="button" class="hover:text-ink">Log out</Link>
+                        <i class="h-2 w-2 rounded-full" :class="dataset.source === 'synthetic' ? 'bg-[#e0a64b]' : 'bg-[#6cc59a]'" aria-hidden="true" />
+                        {{ dataset.source === 'synthetic' ? 'Synthetic data' : 'Real data' }}
+                        <span class="text-shell-ink/60">{{ dataset.cycle }} cycle</span>
+                    </span>
+                    <ThemeToggle />
+                    <UserMenu />
                 </div>
             </div>
             <SyntheticBanner />
         </header>
-        <main class="mx-auto max-w-screen-xl px-4 py-6 sm:px-6">
-            <header v-if="$slots.header" class="mb-5"><slot name="header" /></header>
+        <div class="border-b border-line bg-bg"><WorkflowStepper /></div>
+        <main :class="bleed ? 'flex-1' : 'mx-auto w-full max-w-screen-xl flex-1 px-4 py-8 sm:px-6'">
+            <header v-if="$slots.header && !bleed" class="mb-6"><slot name="header" /></header>
             <slot />
         </main>
     </div>

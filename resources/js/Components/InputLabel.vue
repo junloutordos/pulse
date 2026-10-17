@@ -1,11 +1,9 @@
 <script setup lang="ts">
-defineProps<{
-    value?: string;
-}>();
+defineProps<{ value?: string }>();
 </script>
 
 <template>
-    <label class="block text-sm font-medium text-gray-700">
+    <label class="block text-sm font-semibold text-ink">
         <span v-if="value">{{ value }}</span>
         <span v-else><slot /></span>
     </label>

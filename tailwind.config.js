@@ -15,6 +15,10 @@ export default {
             colors: {
                 bg: 'var(--bg)',
                 surface: 'var(--surface)',
+                'surface-2': 'var(--surface-2)',
+                shell: 'var(--shell)',
+                'shell-ink': 'var(--shell-ink)',
+                'accent-soft': 'var(--accent-soft)',
                 ink: 'var(--ink)',
                 muted: 'var(--muted)',
                 line: 'var(--line)',
@@ -37,11 +41,13 @@ export default {
             fontFamily: {
                 display: 'var(--font-display)',
                 body: 'var(--font-body)',
-                data: 'var(--font-data)',
                 sans: ['var(--font-body)', ...defaultTheme.fontFamily.sans],
             },
             borderRadius: {
-                DEFAULT: 'var(--radius)',
+                sm: 'var(--radius-sm)',
+                DEFAULT: 'var(--radius-sm)',
+                md: 'var(--radius)',
+                lg: 'var(--radius-lg)',
             },
         },
     },

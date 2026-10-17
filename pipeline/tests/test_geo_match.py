@@ -61,3 +61,17 @@ def test_load_aliases_reads_yaml(tmp_path):
     p = tmp_path / "aliases.yml"
     p.write_text("R.T. Romualdez: Remedios T. Romualdez\n")
     assert load_aliases(p) == ALIASES
+
+
+def test_city_of_prefix_and_city_suffix_are_interchangeable(ref):
+    raw = _raw(("City of Tandag", "Surigao del Sur", 2026, 50), ("Butuan", "Agusan del Norte", 2026, 80), ("Butuan City", "Agusan del Norte", 2025, 70))
+    res = match_psgc(raw, ref, {})
+    assert list(res.matched.psgc) == ["9900200002", "9900100001", "9900100001"]
+    assert set(res.matched.match_method) == {"exact"}
+
+
+def test_city_normalisation_does_not_merge_different_places(ref):
+    res = match_psgc(_raw(("Carmen City", "Agusan del Norte", 2026, 30)), ref, {})
+    assert list(res.matched.psgc) == ["9900100003"]  # 'Carmen City' reads as Carmen, still by province
+    res2 = match_psgc(_raw(("Carmen", "Surigao del Sur", 2026, 30)), ref, {})
+    assert list(res2.matched.psgc) == ["9900200001"]

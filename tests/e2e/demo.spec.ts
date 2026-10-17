@@ -8,7 +8,7 @@ async function login(page: Page, email: string) {
     await expect(page).toHaveURL(/dashboard/);
 }
 
-const nav = (page: Page, name: string) => page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name, exact: true });
+const nav = (page: Page, name: string) => page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: new RegExp(`${name}$`) });
 
 const topFive = (page: Page) => page.locator('tbody tr td:nth-child(2) a').evaluateAll((els) => els.slice(0, 5).map((e) => e.textContent!.trim()));
 
@@ -25,15 +25,17 @@ test('source-to-decision demo path', async ({ page, request }) => {
     await nav(page, 'Data trust').click();
     await expect(page.getByRole('heading', { name: 'Can we trust this dataset?' })).toBeVisible();
     await expect(page.getByText('Every total reconciles with the custodian.')).toBeVisible();
-    await expect(page.getByRole('row', { name: /Tubajon.*Missing/ })).toBeVisible();
-    await expect(page.getByRole('row', { name: /Barobo.*Suppressed/ })).toBeVisible();
+    await expect(page.getByText('Ready for planning')).toBeVisible();
+    await expect(page.getByRole('row').filter({ hasText: 'Missing' }).first()).toBeVisible();
+    await expect(page.getByRole('row').filter({ hasText: 'Suppressed' }).first()).toBeVisible();
 
     // 3. The map draws municipalities and switches metric.
     await nav(page, 'Map').click();
     await expect(page.locator('.maplibregl-canvas')).toBeVisible();
-    await page.getByRole('button', { name: 'Exam attendance' }).click();
-    await expect(page.getByRole('button', { name: 'Exam attendance' })).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByText('Pipeline stages, share of applicants')).toBeVisible();
+    await page.getByRole('radio', { name: 'Exam attendance' }).click();
+    await expect(page.getByRole('radio', { name: 'Exam attendance' })).toHaveAttribute('aria-checked', 'true');
+    await page.getByRole('button', { name: 'Boundaries' }).click();
+    await expect(page.getByText('How far applicants get')).toBeVisible();
 
     // 4. The pipeline scatter separates low applications from low attendance.
     await nav(page, 'Pipeline').click();
@@ -55,11 +57,11 @@ test('source-to-decision demo path', async ({ page, request }) => {
     // 6. Planner: five slots, accept the first suggestion.
     await nav(page, 'Planner').click();
     await page.locator('#slots').fill('5');
-    await expect(page.locator('ol > li')).toHaveCount(5);
-    const firstHref = await page.locator('ol > li').first().getByRole('link').first().getAttribute('href');
+    await expect(page.locator('main ol > li')).toHaveCount(5);
+    const firstHref = await page.locator('main ol > li').first().getByRole('link').first().getAttribute('href');
     const psgc = new URL(firstHref!, 'http://x').searchParams.get('psgc')!;
     await page.getByRole('button', { name: 'Accept' }).first().click();
-    await expect(page.getByText('1 accepted · 1 in register')).toBeVisible();
+    await expect(page.getByText('1 accepted, 1 in register')).toBeVisible();
 
     // 7. Brief: watermark and provenance in the page, a real PDF, and the register entry.
     await nav(page, 'Brief').click();
@@ -75,7 +77,8 @@ test('source-to-decision demo path', async ({ page, request }) => {
     expect(pdf.headers()['content-type']).toContain('application/pdf');
 
     // 8. A viewer can read everything but cannot record decisions.
-    await page.getByRole('button', { name: 'Log out' }).click();
+    await page.getByRole('button', { name: /Account menu/ }).click();
+    await page.getByRole('menuitem', { name: 'Log out' }).click();
     await login(page, 'viewer@pulse.test');
     await page.goto('/planner');
     await expect(page.getByText('You can view the shortlist. Planners record decisions.')).toBeVisible();

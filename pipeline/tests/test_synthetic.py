@@ -67,3 +67,11 @@ def test_shared_names_stay_distinct(ref):
     df = generate_synthetic(ref)
     carmen = df[(df.raw_name == "Carmen") & (df.cycle == 2026)]
     assert set(carmen.raw_province) == {"Agusan del Norte", "Surigao del Sur"}
+
+
+def test_the_missing_case_is_never_a_city(ref):
+    from pulse_pipeline.synthetic import generate_synthetic
+
+    t = generate_synthetic(ref).attrs["planted"]
+    name = ref.munis.set_index("psgc").loc[t["missing"], "name"]
+    assert "City" not in name

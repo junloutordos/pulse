@@ -9,7 +9,7 @@ PULSE helps PSHS-CRC decide which Caraga municipalities to prioritize for NCE ou
 | Pipeline (Python 3.12) | Turns municipality aggregates into a versioned folder (Parquet, JSONL, GeoJSON, provenance with checksums) | `pipeline/` |
 | App (Laravel 13, Inertia, Vue 3) | Imports a version into MySQL and serves six screens, the evidence brief (HTML and PDF) and the action register | `app/`, `resources/` |
 | Database | MySQL 8.4.11 (pinned in `docker-compose.yml`) | Docker service `mysql` |
-| Reference data | Municipality list and boundaries. **The copy in `data/reference/` is approximate and for development only** (placeholder codes, Voronoi shapes). Replace it with the official PSGC list and boundaries. | `data/reference/` |
+| Reference data | Caraga municipalities with official 10-digit PSGC codes and open boundary polygons, plus tile hexagons for the tile map. Built from an open PSGC shapefile (see `licenses.md`); confirm the PSGC quarter against the current PSA publication before real use. | `data/reference/` |
 
 ## Roles to name before the sandbox closes
 

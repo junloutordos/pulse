@@ -7,7 +7,7 @@ const dataset = computed(() => usePage<PageProps>().props.dataset);
 </script>
 
 <template>
-    <div v-if="dataset?.source === 'synthetic'" role="status" class="border-t border-line bg-warn-bg px-4 py-1.5 text-sm text-warn sm:px-6">
+    <div v-if="dataset?.source === 'synthetic'" role="status" class="bg-warn-bg px-4 py-1 text-center text-[0.8125rem] text-warn sm:px-6">
         <strong class="font-semibold">Synthetic data.</strong>
         Generated for demonstration. These are not real NCE figures.
     </div>

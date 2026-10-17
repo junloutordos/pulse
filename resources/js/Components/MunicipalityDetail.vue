@@ -34,43 +34,51 @@ const stages = computed(() => {
         { label: 'Qualified', value: props.row.qualifiers, share: share(props.row.qualifiers), regionShare: null },
     ];
 });
+const stats = computed(() => [
+    { label: `Applicants in ${props.cycle}`, value: hidden.value ? '—' : count(props.row.applicants), sub: props.row.prior_applicants !== null ? `${count(props.row.prior_applicants)} in ${props.priorCycle ?? 'the prior cycle'}` : '' },
+    { label: 'Applications per 1,000', value: fixed(props.row.rate_per_1000), sub: props.row.grade6_pop !== null ? `${count(props.row.grade6_pop)} Grade 6 learners` : 'No Grade 6 count' },
+    { label: 'Exam attendance', value: pct(props.row.attendance), sub: 'of those who applied' },
+    { label: `Change vs ${props.priorCycle ?? 'prior cycle'}`, value: signedPct(props.row.change), sub: 'in applications' },
+]);
 </script>
 
 <template>
-    <div class="grid gap-4">
+    <div class="grid gap-5">
         <div class="flex items-start justify-between gap-3">
-            <div>
-                <h3 class="text-xl font-semibold">{{ row.name }}</h3>
+            <div class="min-w-0">
+                <h3 class="text-2xl font-bold leading-tight">{{ row.name }}</h3>
                 <p class="text-sm text-muted">{{ row.province }}</p>
             </div>
             <StatusPill :status="row.status" />
         </div>
 
-        <p v-if="row.status === 'suppressed'" class="border-l-2 border-crit bg-crit-bg px-3 py-2 text-sm text-crit">
+        <p v-if="row.status === 'suppressed'" class="rounded bg-crit-bg px-3 py-2 text-sm text-crit">
             The applicant count is below 5, so PULSE withholds it. This municipality is not charted or ranked.
         </p>
-        <p v-else-if="row.status === 'missing'" class="border-l-2 border-crit bg-crit-bg px-3 py-2 text-sm text-crit">
+        <p v-else-if="row.status === 'missing'" class="rounded bg-crit-bg px-3 py-2 text-sm text-crit">
             The source has no {{ cycle }} row for this municipality. Missing is not zero, so it is not charted or ranked.
         </p>
-        <p v-else-if="row.status === 'low'" class="border-l-2 border-warn bg-warn-bg px-3 py-2 text-sm text-warn">
+        <p v-else-if="row.status === 'low'" class="rounded bg-warn-bg px-3 py-2 text-sm text-warn">
             Fewer than 15 applicants. It is shown on the map but never ranked.
         </p>
 
-        <dl class="grid grid-cols-[1fr_auto] gap-x-6 gap-y-1.5 text-sm">
-            <dt class="text-muted">Applicants {{ cycle }}</dt><dd class="num text-right">{{ hidden ? '—' : count(row.applicants) }}</dd>
-            <dt class="text-muted">Applicants {{ priorCycle ?? 'prior' }}</dt><dd class="num text-right">{{ count(row.prior_applicants) }}</dd>
-            <dt class="text-muted">Grade 6 learners</dt><dd class="num text-right">{{ count(row.grade6_pop) }}</dd>
-            <dt class="text-muted">Applications per 1,000</dt><dd class="num text-right">{{ fixed(row.rate_per_1000) }}</dd>
-            <dt class="text-muted">Exam attendance</dt><dd class="num text-right">{{ pct(row.attendance) }}</dd>
-            <dt class="text-muted">Change vs {{ priorCycle ?? 'prior cycle' }}</dt><dd class="num text-right">{{ signedPct(row.change) }}</dd>
-            <dt class="text-muted">Priority rank</dt>
-            <dd class="num text-right">{{ rank ? `#${rank} of ${ranked}` : 'Not ranked' }}</dd>
+        <div class="flex items-baseline gap-2">
+            <span class="num font-display text-5xl font-bold leading-none">{{ rank ? `#${rank}` : '—' }}</span>
+            <span class="text-sm text-muted">{{ rank ? `of ${ranked} ranked municipalities` : 'Not ranked' }}</span>
+        </div>
+
+        <dl class="grid grid-cols-2 gap-x-5 gap-y-4">
+            <div v-for="s in stats" :key="s.label">
+                <dt class="label">{{ s.label }}</dt>
+                <dd class="num font-display text-2xl font-bold leading-tight">{{ s.value }}</dd>
+                <dd v-if="s.sub" class="text-[0.8125rem] text-muted">{{ s.sub }}</dd>
+            </div>
         </dl>
 
         <div v-if="!hidden">
-            <p class="label mb-2">Pipeline stages, share of applicants</p>
+            <p class="label mb-2">How far applicants get</p>
             <Funnel :stages="stages" />
-            <p class="mt-2 text-xs text-muted">Qualification reflects a selective exam. It is context, not evidence of access barriers.</p>
+            <p class="mt-2 text-[0.8125rem] text-muted">Qualification reflects a selective exam. It is context, not evidence of access barriers.</p>
         </div>
 
         <div class="flex flex-wrap gap-2">

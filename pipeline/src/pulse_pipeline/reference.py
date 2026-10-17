@@ -20,6 +20,6 @@ def load_reference(dir: Path) -> Reference:
         raise ValueError(f"psgc.csv columns must be {MUNI_COLUMNS}, got {list(munis.columns)}")
     boundaries = gpd.read_file(dir / "boundaries.geojson")
     boundaries["psgc"] = boundaries["psgc"].astype(str)
-    if set(boundaries["psgc"]) != set(munis["psgc"]):
+    if set(boundaries.loc[boundaries["psgc"] != "", "psgc"]) != set(munis["psgc"]):
         raise ValueError("boundaries.geojson and psgc.csv must list the same PSGC codes")
     return Reference(munis=munis, boundaries=boundaries)

@@ -35,6 +35,7 @@ const ratio = (a, b) => {
 const PAIRS = [
     ['ink', 'bg'], ['ink', 'surface'], ['muted', 'bg'], ['muted', 'surface'], ['accent', 'bg'], ['accent', 'surface'],
     ['accent-ink', 'accent'], ['ok', 'ok-bg'], ['warn', 'warn-bg'], ['crit', 'crit-bg'], ['crit', 'surface'],
+    ['shell-ink', 'shell'], ['accent', 'accent-soft'], ['ink', 'surface-2'], ['muted', 'surface-2'], ['accent', 'surface-2'],
 ];
 
 let failed = false;

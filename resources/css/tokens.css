@@ -1,81 +1,96 @@
-/* PULSE design tokens. Direction: Atlas (calm cartographic report), sans-serif headings.
+/* PULSE design tokens. Direction: Atlas, deepened. Calm cartographic palette, sans-serif throughout.
    Every colour is defined on bare :root (light). The two dark blocks only redefine colours and must stay identical:
    one follows the OS setting, the other follows the explicit toggle. */
 :root {
-    --bg: #edf1f4;
-    --surface: #f9fafb;
-    --ink: #14212b;
-    --muted: #55646f;
-    --line: #cfd8de;
-    --accent: #1d4e7a;
+    --bg: #eef1f3;
+    --surface: #ffffff;
+    --surface-2: #e5eaee;
+    --shell: #0b2233;
+    --shell-ink: #e8f0f5;
+    --ink: #0e2233;
+    --muted: #566673;
+    --line: #d3dae0;
+    --accent: #0d5c8f;
     --accent-ink: #ffffff;
-    --ok: #266b4c;
-    --ok-bg: #dcede5;
-    --warn: #8a5508;
-    --warn-bg: #f6ead3;
-    --crit: #a9352a;
-    --crit-bg: #f6dedb;
-    /* sequential ramp for choropleths, low to high */
-    --q0: #e3edf4;
-    --q1: #b7d0e3;
-    --q2: #7fa9cb;
-    --q3: #4a7fab;
-    --q4: #1d4e7a;
-    --land: #dfe7ec;
-    --sea: #f5f8fa;
+    --accent-soft: #dcebf5;
+    --ok: #1e6b4a;
+    --ok-bg: #dcefe5;
+    --warn: #7f4d05;
+    --warn-bg: #f6e9cc;
+    --crit: #a32d23;
+    --crit-bg: #f8dfdb;
+    --q0: #e3f0f0;
+    --q1: #b5d9d9;
+    --q2: #6fb5ba;
+    --q3: #2f86a0;
+    --q4: #0b4968;
+    --land: #dde4e8;
+    --sea: #f4f7f9;
 
-    --font-display: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
-    --font-body: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
-    --font-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-    --radius: 2px;
+    --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', 'Hanken Grotesk Variable', system-ui, sans-serif;
+    --font-body: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, sans-serif;
+    --radius-sm: 6px;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow-float: 0 1px 2px rgb(8 28 44 / 0.08), 0 8px 24px rgb(8 28 44 / 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-        --bg: #0f1a22;
-        --surface: #14222c;
-        --ink: #e4ecf1;
-        --muted: #8fa1ad;
-        --line: #263744;
-        --accent: #7fb2dc;
-        --accent-ink: #0f1a22;
+        --bg: #08121a;
+        --surface: #0f1e29;
+        --surface-2: #0b1821;
+        --shell: #050d14;
+        --shell-ink: #e1ebf1;
+        --ink: #e5edf2;
+        --muted: #8ea2af;
+        --line: #1e3140;
+        --accent: #6db8e8;
+        --accent-ink: #08121a;
+        --accent-soft: #14303f;
         --ok: #6cc59a;
-        --ok-bg: #16322a;
+        --ok-bg: #143126;
         --warn: #e0a64b;
         --warn-bg: #35290f;
         --crit: #ee8478;
         --crit-bg: #3c1f1b;
-        --q0: #1b3446;
-        --q1: #24506e;
-        --q2: #3a769f;
-        --q3: #63a2cc;
-        --q4: #a9d3ee;
-        --land: #182833;
-        --sea: #0f1a22;
+        --q0: #12303a;
+        --q1: #1b5560;
+        --q2: #2a8283;
+        --q3: #55b6ae;
+        --q4: #b4ebd9;
+        --land: #14232d;
+        --sea: #08121a;
+        --shadow-float: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.45);
         color-scheme: dark;
     }
 }
 
 :root[data-theme="dark"] {
-    --bg: #0f1a22;
-    --surface: #14222c;
-    --ink: #e4ecf1;
-    --muted: #8fa1ad;
-    --line: #263744;
-    --accent: #7fb2dc;
-    --accent-ink: #0f1a22;
+    --bg: #08121a;
+    --surface: #0f1e29;
+    --surface-2: #0b1821;
+    --shell: #050d14;
+    --shell-ink: #e1ebf1;
+    --ink: #e5edf2;
+    --muted: #8ea2af;
+    --line: #1e3140;
+    --accent: #6db8e8;
+    --accent-ink: #08121a;
+    --accent-soft: #14303f;
     --ok: #6cc59a;
-    --ok-bg: #16322a;
+    --ok-bg: #143126;
     --warn: #e0a64b;
     --warn-bg: #35290f;
     --crit: #ee8478;
     --crit-bg: #3c1f1b;
-    --q0: #1b3446;
-    --q1: #24506e;
-    --q2: #3a769f;
-    --q3: #63a2cc;
-    --q4: #a9d3ee;
-    --land: #182833;
-    --sea: #0f1a22;
+    --q0: #12303a;
+    --q1: #1b5560;
+    --q2: #2a8283;
+    --q3: #55b6ae;
+    --q4: #b4ebd9;
+    --land: #14232d;
+    --sea: #08121a;
+    --shadow-float: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.45);
     color-scheme: dark;
 }

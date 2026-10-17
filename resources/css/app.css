@@ -6,17 +6,34 @@
 @layer base {
     html {
         background: var(--bg);
+        scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
     }
 
     body {
         @apply bg-bg font-body text-ink antialiased;
         font-size: 15px;
-        line-height: 1.5;
+        line-height: 1.55;
     }
 
     h1, h2, h3, h4 {
         @apply font-display;
+        letter-spacing: -0.015em;
         text-wrap: balance;
+    }
+
+    ::selection {
+        background: var(--accent);
+        color: var(--accent-ink);
     }
 
     :focus-visible {
@@ -24,7 +41,6 @@
         outline-offset: 2px;
     }
 
-    select,
     input[type='text'],
     input[type='email'],
     input[type='password'],
@@ -38,35 +54,103 @@
 
 @layer components {
     .num {
-        font-family: var(--font-data);
-        font-variant-numeric: tabular-nums;
+        font-variant-numeric: tabular-nums lining-nums;
     }
 
     .label {
-        @apply text-[0.7rem] font-semibold uppercase tracking-[0.09em] text-muted;
-    }
-
-    .pill {
-        @apply inline-block whitespace-nowrap px-1.5 py-px text-xs font-semibold;
-        border-radius: var(--radius);
-    }
-
-    .pill-ok { @apply bg-ok-bg text-ok; }
-    .pill-warn { @apply bg-warn-bg text-warn; }
-    .pill-crit { @apply bg-crit-bg text-crit; }
-    .pill-plain { @apply border border-line text-muted; }
-
-    .btn {
-        @apply inline-flex items-center gap-2 border border-line bg-surface px-3.5 py-1.5 text-sm font-semibold text-ink hover:border-accent;
-        border-radius: var(--radius);
-    }
-
-    .btn-primary {
-        @apply border-accent bg-accent text-accent-ink hover:opacity-90;
+        @apply text-[0.8125rem] font-medium text-muted;
     }
 
     .panel {
-        @apply border border-line bg-surface;
-        border-radius: var(--radius);
+        @apply rounded-lg bg-surface;
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 8%, transparent);
+    }
+
+    .float {
+        @apply rounded-lg bg-surface;
+        box-shadow: var(--shadow-float), 0 0 0 1px color-mix(in srgb, var(--ink) 6%, transparent);
+    }
+
+    .pill {
+        @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold;
+    }
+    .pill-ok { @apply bg-ok-bg text-ok; }
+    .pill-warn { @apply bg-warn-bg text-warn; }
+    .pill-crit { @apply bg-crit-bg text-crit; }
+    .pill-plain { @apply bg-surface-2 text-muted; }
+
+    .btn {
+        @apply inline-flex h-9 items-center justify-center gap-2 rounded bg-surface px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50;
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent);
+    }
+    .btn-primary {
+        @apply bg-accent text-accent-ink hover:bg-accent;
+        box-shadow: none;
+    }
+    .btn-primary:hover:not(:disabled) {
+        filter: brightness(1.08);
+    }
+    .btn-quiet {
+        @apply bg-transparent;
+        box-shadow: none;
+    }
+    .btn-sm {
+        @apply h-8 px-3 text-[0.8125rem];
+    }
+    .icon-btn {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded text-current transition-colors hover:bg-black/5;
+    }
+
+    .range {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 4px;
+        width: 100%;
+        border-radius: 999px;
+        background: linear-gradient(to right, var(--accent) var(--pct, 0%), var(--surface-2) var(--pct, 0%));
+        cursor: pointer;
+    }
+    .range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 999px;
+        background: var(--surface);
+        border: 2px solid var(--accent);
+        box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+    }
+    .range::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        border-radius: 999px;
+        background: var(--surface);
+        border: 2px solid var(--accent);
+        box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+    }
+    .range:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
+
+    .data-table {
+        @apply w-full text-sm;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .data-table th {
+        @apply whitespace-nowrap bg-surface px-3 py-2.5 text-left text-[0.8125rem] font-medium text-muted;
+        position: sticky;
+        top: 0;
+        box-shadow: inset 0 -1px 0 var(--line);
+    }
+    .data-table td {
+        @apply px-3 py-3 align-middle;
+        box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--line) 60%, transparent);
+    }
+    .data-table tbody tr:hover td {
+        background: color-mix(in srgb, var(--surface-2) 55%, transparent);
+    }
+    .data-table tbody tr:last-child td {
+        box-shadow: none;
     }
 }

@@ -24,8 +24,8 @@ const light = declarations(blockAfter(':root {'));
 const systemDark = declarations(blockAfter(':root:not([data-theme="light"])'));
 const explicitDark = declarations(blockAfter(':root[data-theme="dark"]'));
 
-const COLORS = ['bg', 'surface', 'ink', 'muted', 'line', 'accent', 'accent-ink', 'ok', 'ok-bg', 'warn', 'warn-bg',
-    'crit', 'crit-bg', 'q0', 'q1', 'q2', 'q3', 'q4', 'land', 'sea'];
+const COLORS = ['bg', 'surface', 'surface-2', 'shell', 'shell-ink', 'ink', 'muted', 'line', 'accent', 'accent-ink', 'accent-soft',
+    'ok', 'ok-bg', 'warn', 'warn-bg', 'crit', 'crit-bg', 'q0', 'q1', 'q2', 'q3', 'q4', 'land', 'sea'];
 
 describe('design tokens', () => {
     it('defines every colour token in light, system-dark and explicit-dark blocks', () => {
@@ -39,7 +39,7 @@ describe('design tokens', () => {
     });
 
     it('defines type roles and radius once, on the light block', () => {
-        for (const token of ['font-display', 'font-body', 'font-data', 'radius']) expect(light.has(token)).toBe(true);
+        for (const token of ['font-display', 'font-body', 'radius', 'radius-sm', 'radius-lg']) expect(light.has(token)).toBe(true);
     });
 
     it('uses a sans-serif display face, not a serif', () => {

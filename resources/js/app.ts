@@ -1,6 +1,5 @@
-import '@fontsource-variable/source-sans-3';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/hanken-grotesk';
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';

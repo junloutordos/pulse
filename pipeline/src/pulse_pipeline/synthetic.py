@@ -9,8 +9,7 @@ _SYNTH_CAMPUS = (8.949, 125.543)
 _CYCLES = (2025, 2026)
 _ISLAND_NAMES = {"Burgos", "Dapa", "Del Carmen", "General Luna", "Pilar", "San Benito",
                  "San Isidro", "Santa Monica", "Socorro"}
-ALIAS_SPELLINGS = {"Remedios T. Romualdez": "R.T. Romualdez", "Tagana-an": "Taganaan",
-                    "Santa Josefa": "Sta. Josefa", "Butuan City": "Butuan"}
+ALIAS_SPELLINGS = {"Remedios T. Romualdez": "R.T. Romualdez", "Tagana-An": "Taganaan", "Santa Josefa": "Sta. Josefa"}
 
 PLANTED_CASES = {
     "alias": "Source spells the municipality differently from the PSGC name",
@@ -36,7 +35,9 @@ def generate_synthetic(ref: Reference, seed: int = SEED) -> pd.DataFrame:
     candidates = [p for p in munis.psgc if p not in alias_holders]
     suppressed = min(candidates, key=lambda p: (pop[p], p))
     candidates.remove(suppressed)
-    missing = candidates.pop()
+    names = dict(zip(munis.psgc, munis.name))
+    missing = [p for p in candidates if "City" not in names[p]][-1]  # never the main cities: a missing city would dominate the demo
+    candidates.remove(missing)
     decline = candidates.pop(0)
     no_denominator = candidates.pop(0)
     planted = {"alias": alias_holders[0], "suppressed": suppressed, "missing": missing,
