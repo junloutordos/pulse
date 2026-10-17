@@ -7,9 +7,13 @@ use App\Models\DatasetVersion;
 use App\Models\Municipality;
 use App\Models\MunicipalityIndicator;
 use App\Models\PlannerDecision;
+use App\Services\Narrative\ClaudeNarrative;
+use App\Services\Narrative\TemplateNarrative;
 
 class BriefBuilder
 {
+    public function __construct(private readonly TemplateNarrative $template, private readonly ?ClaudeNarrative $ai = null) {}
+
     private const ACTION_FOR = [
         'reach' => 'Information and application campaign',
         'attendance' => 'Exam reminder and access review',
@@ -43,7 +47,7 @@ class BriefBuilder
         $components = $this->components($ind);
         $weightTotal = array_sum($weights) ?: 1;
 
-        return [
+        $data = [
             'municipality' => $municipality,
             'status' => $ind->status,
             'observations' => [
@@ -76,6 +80,10 @@ class BriefBuilder
             ],
             'synthetic' => $version->source === 'synthetic',
         ];
+
+        $aiSummary = $this->ai?->summarize($data);
+
+        return $data + ['summary' => $aiSummary ?? $this->template->summarize($data), 'summaryIsAi' => $aiSummary !== null];
     }
 
     /** @return array{reach: ?float, attendance: ?float, decline: ?float} */

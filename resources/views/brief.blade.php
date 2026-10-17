@@ -44,6 +44,12 @@
         </td>
     </tr></table>
 
+    <h2>Summary</h2>
+    <p>{{ $summary }}</p>
+    @if ($summaryIsAi)
+        <p class="muted">AI-assisted summary. Generated from aggregate figures only; staff must validate it.</p>
+    @endif
+
     <table><tr>
         <td class="col">
             <h2>What we observed</h2>

@@ -15,3 +15,4 @@
 - Lakehouse source (DuckDB connection stand-in) and `--source lakehouse` CLI option.
 - Visual direction (Atlas, sans headings), design tokens with contrast and theme tests, app layout, start page.
 - Demo seeder and a Playwright script for the whole source-to-decision demo path.
+- Optional AI-assisted brief summary (off by default, aggregate-only payload, template fallback).

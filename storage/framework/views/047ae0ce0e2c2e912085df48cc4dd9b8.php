@@ -44,6 +44,12 @@
         </td>
     </tr></table>
 
+    <h2>Summary</h2>
+    <p><?php echo e($summary); ?></p>
+    <?php if($summaryIsAi): ?>
+        <p class="muted">AI-assisted summary. Generated from aggregate figures only; staff must validate it.</p>
+    <?php endif; ?>
+
     <table><tr>
         <td class="col">
             <h2>What we observed</h2>
