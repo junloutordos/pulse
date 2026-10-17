@@ -6,3 +6,4 @@
 - Health tests: MySQL is 8.4 or newer, `/up` returns 200.
 - Pipeline package skeleton, reference loader and seeded synthetic generator (5 planted data problems).
 - PSGC matching (exact, alias, province-aware), suppression rules and reconciliation.
+- Indicators (rate per 1,000, attendance, change) and explainable priority score with shared fixtures.

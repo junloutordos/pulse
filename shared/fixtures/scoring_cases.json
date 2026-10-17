@@ -1,0 +1,309 @@
+[
+  {
+    "name": "balanced three components",
+    "weights": {
+      "reach": 1,
+      "attendance": 1,
+      "decline": 1
+    },
+    "rows": [
+      {
+        "psgc": "A",
+        "status": "ok",
+        "rate_per_1000": 10,
+        "attendance": 0.9,
+        "change": -0.3
+      },
+      {
+        "psgc": "B",
+        "status": "ok",
+        "rate_per_1000": 20,
+        "attendance": 0.8,
+        "change": 0.0
+      },
+      {
+        "psgc": "C",
+        "status": "ok",
+        "rate_per_1000": 30,
+        "attendance": 0.7,
+        "change": 0.1
+      }
+    ],
+    "expected": [
+      {
+        "psgc": "A",
+        "score": 66.66666666666667,
+        "rank": 1,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "B",
+        "score": 50.0,
+        "rank": 2,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "C",
+        "score": 33.333333333333336,
+        "rank": 3,
+        "not_ranked_reason": null
+      }
+    ]
+  },
+  {
+    "name": "single cycle drops decline",
+    "weights": {
+      "reach": 2,
+      "attendance": 1,
+      "decline": 1
+    },
+    "rows": [
+      {
+        "psgc": "A",
+        "status": "ok",
+        "rate_per_1000": 10,
+        "attendance": 0.9,
+        "change": null
+      },
+      {
+        "psgc": "B",
+        "status": "ok",
+        "rate_per_1000": 20,
+        "attendance": 0.8,
+        "change": null
+      },
+      {
+        "psgc": "C",
+        "status": "ok",
+        "rate_per_1000": 30,
+        "attendance": 0.7,
+        "change": null
+      }
+    ],
+    "expected": [
+      {
+        "psgc": "A",
+        "score": 66.66666666666667,
+        "rank": 1,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "B",
+        "score": 50.0,
+        "rank": 2,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "C",
+        "score": 33.333333333333336,
+        "rank": 3,
+        "not_ranked_reason": null
+      }
+    ]
+  },
+  {
+    "name": "no denominator drops reach",
+    "weights": {
+      "reach": 1,
+      "attendance": 2,
+      "decline": 1
+    },
+    "rows": [
+      {
+        "psgc": "A",
+        "status": "ok",
+        "rate_per_1000": null,
+        "attendance": 0.9,
+        "change": -0.3
+      },
+      {
+        "psgc": "B",
+        "status": "ok",
+        "rate_per_1000": null,
+        "attendance": 0.8,
+        "change": 0.0
+      },
+      {
+        "psgc": "C",
+        "status": "ok",
+        "rate_per_1000": null,
+        "attendance": 0.7,
+        "change": 0.1
+      }
+    ],
+    "expected": [
+      {
+        "psgc": "A",
+        "score": 33.333333333333336,
+        "rank": 3,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "B",
+        "score": 50.0,
+        "rank": 2,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "C",
+        "score": 66.66666666666667,
+        "rank": 1,
+        "not_ranked_reason": null
+      }
+    ]
+  },
+  {
+    "name": "insufficient data is never ranked",
+    "weights": {
+      "reach": 1,
+      "attendance": 1,
+      "decline": 1
+    },
+    "rows": [
+      {
+        "psgc": "A",
+        "status": "ok",
+        "rate_per_1000": 10,
+        "attendance": 0.9,
+        "change": -0.3
+      },
+      {
+        "psgc": "B",
+        "status": "ok",
+        "rate_per_1000": 20,
+        "attendance": 0.8,
+        "change": 0.0
+      },
+      {
+        "psgc": "C",
+        "status": "ok",
+        "rate_per_1000": 30,
+        "attendance": 0.7,
+        "change": 0.1
+      },
+      {
+        "psgc": "D",
+        "status": "low",
+        "rate_per_1000": 5,
+        "attendance": 0.5,
+        "change": -0.5
+      },
+      {
+        "psgc": "E",
+        "status": "suppressed",
+        "rate_per_1000": null,
+        "attendance": null,
+        "change": null
+      },
+      {
+        "psgc": "F",
+        "status": "missing",
+        "rate_per_1000": null,
+        "attendance": null,
+        "change": null
+      }
+    ],
+    "expected": [
+      {
+        "psgc": "A",
+        "score": 66.66666666666667,
+        "rank": 1,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "B",
+        "score": 50.0,
+        "rank": 2,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "C",
+        "score": 33.333333333333336,
+        "rank": 3,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "D",
+        "score": null,
+        "rank": null,
+        "not_ranked_reason": "fewer than 15 applicants"
+      },
+      {
+        "psgc": "E",
+        "score": null,
+        "rank": null,
+        "not_ranked_reason": "applicant count suppressed"
+      },
+      {
+        "psgc": "F",
+        "score": null,
+        "rank": null,
+        "not_ranked_reason": "no data for this cycle"
+      }
+    ]
+  },
+  {
+    "name": "ok row missing an active component is not ranked",
+    "weights": {
+      "reach": 1,
+      "attendance": 1,
+      "decline": 1
+    },
+    "rows": [
+      {
+        "psgc": "A",
+        "status": "ok",
+        "rate_per_1000": 10,
+        "attendance": 0.9,
+        "change": -0.3
+      },
+      {
+        "psgc": "B",
+        "status": "ok",
+        "rate_per_1000": 20,
+        "attendance": 0.8,
+        "change": 0.0
+      },
+      {
+        "psgc": "C",
+        "status": "ok",
+        "rate_per_1000": 30,
+        "attendance": 0.7,
+        "change": 0.1
+      },
+      {
+        "psgc": "G",
+        "status": "ok",
+        "rate_per_1000": 15,
+        "attendance": null,
+        "change": -0.1
+      }
+    ],
+    "expected": [
+      {
+        "psgc": "A",
+        "score": 66.66666666666667,
+        "rank": 1,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "B",
+        "score": 50.0,
+        "rank": 2,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "C",
+        "score": 33.333333333333336,
+        "rank": 3,
+        "not_ranked_reason": null
+      },
+      {
+        "psgc": "G",
+        "score": null,
+        "rank": null,
+        "not_ranked_reason": "missing attendance"
+      }
+    ]
+  }
+]
