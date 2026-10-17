@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EmptyState from '@/Components/EmptyState.vue';
 import MunicipalityMap, { MapTip } from '@/Components/MunicipalityMap.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import { suggestedFocus } from '@/lib/focus';
@@ -116,7 +117,8 @@ const tips = computed<Record<string, MapTip>>(() =>
                         <span class="pill pill-plain">{{ accepted }} accepted, {{ register.length }} in register</span>
                     </div>
                     <p v-if="!canPlan" class="mt-2 text-sm text-muted">You can view the shortlist. Planners record decisions.</p>
-                    <ol class="mt-3 divide-y divide-line/70">
+                    <EmptyState v-if="!list.picks.length" title="Nothing to shortlist yet">No municipality can be ranked at the current weights. Check the Data trust screen, or change the weights on the Priority list.</EmptyState>
+                    <ol v-else class="mt-3 divide-y divide-line/70">
                         <li v-for="(p, i) in list.picks" :key="p.psgc" class="grid gap-3 py-4 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto]">
                             <span class="num font-display text-3xl font-bold leading-none text-accent">{{ i + 1 }}</span>
                             <div class="min-w-0">

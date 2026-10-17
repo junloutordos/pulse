@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DataNotices from '@/Components/DataNotices.vue';
+import EmptyState from '@/Components/EmptyState.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import Segmented from '@/Components/Segmented.vue';
 import { suggestedFocus } from '@/lib/focus';
@@ -119,7 +120,8 @@ const presetOptions = Object.keys(PRESETS).map((k) => ({ key: k, label: k }));
                 </aside>
 
                 <section class="grid gap-6" aria-labelledby="ranked">
-                    <div class="panel max-h-[72vh] overflow-auto">
+                    <div v-if="!ranked.length" class="panel"><EmptyState title="No municipality can be ranked">Every municipality is withheld or missing data for the weights you set. Check the Data trust screen for why.</EmptyState></div>
+                    <div v-else class="panel max-h-[72vh] overflow-auto">
                         <table class="data-table">
                             <caption id="ranked" class="sr-only">Municipalities ranked by priority score</caption>
                             <thead>

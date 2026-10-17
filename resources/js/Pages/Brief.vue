@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import EmptyState from '@/Components/EmptyState.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import SelectField from '@/Components/SelectField.vue';
 import { initialSelection, select } from '@/lib/selection';
 import { notify } from '@/lib/toasts';
 import { useWeights } from '@/lib/useWeights';
 import { MunicipalityRow } from '@/types/rows';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { Download, ExternalLink } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
@@ -67,9 +68,12 @@ function complete(id: number) {
                                 <td><span class="pill" :class="e.status === 'completed' ? 'pill-ok' : 'pill-plain'">{{ e.status === 'completed' ? `Completed ${e.completed_on}` : 'Planned' }}</span></td>
                                 <td class="text-right"><button v-if="canPlan && e.status !== 'completed'" type="button" class="btn btn-sm" @click="complete(e.id)">Mark completed</button></td>
                             </tr>
-                            <tr v-if="!register.length"><td colspan="6" class="py-6 text-muted">No actions yet. Accept a municipality in the Outreach planner and it appears here.</td></tr>
                         </tbody>
                     </table>
+                    <EmptyState v-if="!register.length" title="No actions yet">
+                        Accept a municipality in the Outreach planner and it appears here, with its action and office.
+                        <template #actions><Link :href="route('planner')" class="btn btn-primary">Go to the planner</Link></template>
+                    </EmptyState>
                 </div>
             </section>
         </div>

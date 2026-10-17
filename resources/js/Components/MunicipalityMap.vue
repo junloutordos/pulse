@@ -36,6 +36,7 @@ const emit = defineEmits<{ select: [psgc: string] }>();
 const container = ref<HTMLDivElement>();
 const colors = useThemeColors();
 const hover = ref<{ psgc: string; x: number; y: number } | null>(null);
+const status = ref<'loading' | 'ready' | 'error'>('loading');
 
 let map: maplibregl.Map | null = null;
 let geo: GeoJSON.FeatureCollection | null = null;
@@ -201,12 +202,14 @@ function restyle(): void {
     paintFills(false);
 }
 
-onMounted(async () => {
-    let response: Response;
+async function init() {
+    status.value = 'loading';
     try {
-        response = await fetch(route('boundaries', { v: usePage<PageProps>().props.dataset?.version }), { credentials: 'same-origin' });
+        const response = await fetch(route('boundaries', { v: usePage<PageProps>().props.dataset?.version }), { credentials: 'same-origin' });
+        if (!response.ok) throw new Error(String(response.status));
         geo = await response.json();
     } catch {
+        status.value = 'error';
         return;
     }
     if (disposed || !container.value || !geo) return;
@@ -250,6 +253,7 @@ onMounted(async () => {
         m.addLayer({ id: 'muni-pulse', type: 'line', source: 'munis', filter: shapeIs, paint: { 'line-color': colors.value.accent, 'line-width': ['*', ['coalesce', ['feature-state', 'pulse'], 0], 16] as maplibregl.ExpressionSpecification, 'line-opacity': ['-', 1, ['coalesce', ['feature-state', 'pulse'], 0]] as maplibregl.ExpressionSpecification } });
         m.addLayer({ id: 'muni-selected', type: 'line', source: 'munis', filter: shapeIs, paint: { 'line-color': colors.value.ink, 'line-width': flag('selected', 3.5) } });
         ready = true;
+        status.value = 'ready';
         fit();
         paintFills(true, true);
         paintState();
@@ -285,7 +289,9 @@ onMounted(async () => {
         if (ready && !fitted) fit();
     });
     observer.observe(container.value);
-});
+}
+
+onMounted(init);
 
 watch(() => props.fills, () => paintFills(true), { deep: true });
 watch(() => [props.selected, props.highlight], paintState, { deep: true });
@@ -319,6 +325,20 @@ onBeforeUnmount(() => {
 <template>
     <div class="relative h-full w-full overflow-hidden bg-sea">
         <div ref="container" class="h-full w-full" role="application" aria-label="Map of Caraga municipalities. Select a municipality to see its details. A list of municipalities is available as an alternative." />
+
+        <div v-if="status !== 'ready'" class="absolute inset-0 z-10 grid place-items-center bg-sea" :role="status === 'error' ? 'alert' : 'status'">
+            <div v-if="status === 'loading'" class="grid justify-items-center gap-3 text-sm text-muted">
+                <svg viewBox="0 0 48 48" class="h-12 w-12 animate-pulse" aria-hidden="true">
+                    <polygon points="24,4 40,13 40,31 24,40 8,31 8,13" fill="none" stroke="currentColor" stroke-width="2" /><polygon points="24,14 32,18.5 32,27.5 24,32 16,27.5 16,18.5" fill="var(--accent)" opacity="0.5" />
+                </svg>
+                Loading the map
+            </div>
+            <div v-else class="grid max-w-xs justify-items-center gap-3 text-center">
+                <p class="font-semibold">The map could not be loaded</p>
+                <p class="text-sm text-muted">Check your connection, then try again. The rest of the page still works.</p>
+                <button type="button" class="btn btn-primary" @click="init">Try again</button>
+            </div>
+        </div>
 
         <div
             v-if="hover && tips[hover.psgc]"
